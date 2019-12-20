@@ -49,43 +49,58 @@ The current app creates the sensor in the Octave system and sends
 ## View the running application data flow
 
 The External Python test app is now transacting serial data with
-the Octave (remote?) app.
+the Octave system 
 
-https://docs.octave.dev/references/edge/octave_resource_protocol/#source-code-for-the-demo-application-for-southbound-resource-protocol
+On the remote computer command line (PC running Python app) the data looks like this
 
-
-On the remote computer command line (PC running Python app)
 ```
-2019-12-19 15:25:15,980 SbSerial: preparing to send: push num system/cpu/value 0.0 
+C:\Users\john\Documents\Octave\PythonORPclientDemo2\OctaveOrpPythonDemo>python run.py
+2019-12-20 16:47:52,440 SbSerial: creating sensor at sensors/set1
+2019-12-20 16:47:52,440 SbSerial: sending frame, awaiting s
+2019-12-20 16:47:52,525 SbSerial: recv frame: {'status': 'OK', 'responseType': 's'}
+2019-12-20 16:47:52,957 SbSerial: checking message {'status': 'OK', 'responseType': 's'}
+2019-12-20 16:47:53,158 SbSerial: preparing to send: push json sensors/set1/value {"DissolvedOxygen": 78, "Debris": true, "temperature": 123.2, "flowOut": 11.8, "flowIn": 12.5, "waterLevelLow": false, "Turbidity": 45, "waterLevelHigh": true}
+argc: 18
+2019-12-20 16:47:53,397 SbSerial: recv frame: {'status': 'OK', 'responseType': 'p'}
+loop
 ```
- 
 
-At the Octave edge (View in Octave web UI)
+
+At the Octave edge (View in Octave web UI https://octave.sierrawireless.io/device/resources )  - note the doesn't work that well in MS edge browser
 ```
-Devices - remote/system/cpu/value 0.0 
+Devices - remote/sensors/set1/value ...
 ```
  
 
 At the Cloud (View in Octave web UI)
 ```
 {
-  "creationDate": 1576769712182,
+  "creationDate": 1576860654490,
   "creatorId": "i000000000000000000000001",
   "elems": {
     "remote": {
-      "system": {
-        "cpu": 0
+      "sensors": {
+        "set1": {
+          "Debris": true,
+          "DissolvedOxygen": 78,
+          "Turbidity": 45,
+          "flowIn": 12.5,
+          "flowOut": 11.8,
+          "temperature": 123.2,
+          "waterLevelHigh": true,
+          "waterLevelLow": false
+        }
       }
     }
   },
-  "generatedDate": 1576769712179,
+  "generatedDate": 1576860651477,
   "hash": null,
-  "id": "e5dfb98b06079f3b7d6caaa94",
+  "id": "e5dfcfbee9ddc52dee6f1a1ac",
   "lastEditDate": null,
   "location": null,
   "metadata": null,
-  "path": "/linkwave_technologies/devices/macdui_1/cpu",
-  "streamId": "s5dfb987c742183f467ab0832",
+  "path": "/epas_ltd/devices/brianmangohyellow/set_1",
+  "streamId": "s5dfcf77f0dcf212031fea3fc",
   "tags": {
   }
 }
@@ -217,3 +232,6 @@ and program mangOH like this
 
 The ORP app causes a Legato restart the first time ever - there is a delay while the backend syncs - after that it works
 
+# Link to the original app source
+
+https://docs.octave.dev/references/edge/octave_resource_protocol/#source-code-for-the-demo-application-for-southbound-resource-protocol
