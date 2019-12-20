@@ -1,5 +1,13 @@
 # OctaveOrpPythonDemo
- Python demo runs on serial port connected remote machine
+The purpose of this app is to demonstrate and simulate an external 
+ computer sending sensor data via a serial port (UART) to the Octave 
+ system
+
+The app was tested on a Windows 10 PC and used a mangOH Yellow / WP7702 
+ board as the edge device
+ 
+Python demo runs on serial port connected remote machine
+ 
  
 # Install 
 
@@ -21,24 +29,27 @@ pip install -r requirements.txt
 
 
 ## Edit run.py 
-Work out which serial port the USB adapter is and edit this line (COM8) to suit
+Work out which serial port the USB adapter is and edit this line
+ (COM8) to suit
 ```
 DEV = os.getenv('DEV', 'COM8')
 ```
 
-## run the app from the command line
+## Run the app from the remote computers (PC)command line
 
 ```
 python run.py
 ```
 
-The current app creates the sensor in the Octave system and sends one value
+The current app creates the sensor in the Octave system and sends
+ one value
 
 
 
-## the running app
+## View the running application data flow
 
-The External Python test app is now transacting serial data with the Octave (remote?) app.
+The External Python test app is now transacting serial data with
+the Octave (remote?) app.
 
 https://docs.octave.dev/references/edge/octave_resource_protocol/#source-code-for-the-demo-application-for-southbound-resource-protocol
 
@@ -79,3 +90,69 @@ At the Cloud (View in Octave web UI)
   }
 }
 ```
+
+
+# Further Info
+
+## Octave add device
+
+SIM ID  
+```
+at+ccid
++CCID: 89332401000010876791,89033240817620069918070003435626
+```
+
+IMEI  
+```
+at+cgsn
+352653090215245
+```
+
+Serial number == FSN 
+IMEI == IMEI 
+```
+ati
+Manufacturer: Sierra Wireless, Incorporated
+Model: WP7702
+Revision: SWI9X06Y_02.32.02.00 c2e98c jenkins 2019/08/30 07:28:21
+IMEI: 352653090215245
+IMEI SV:  4
+FSN: 4L936370140910
++GCAP: +CGSM,+DS
+```
+
+Go to https://octave.sierrawireless.io/device/new
+
+
+
+
+## Stock product
+```
+ati8
+Legato Ver: 19.07.0_c8105fef6769b17540226029a5d23d44
+Yocto Ver:  SWI9X06Y_02.32.02.00 2019-10-08_01:04:54
+OS Ver: Linux version 3.18.140 (oe-user@oe-host) (gcc version 7.3.0 (GCC) ) #1 PREEMPT Tue Oct 8 00:58:07 UTC 2019
+LK Ver: SWI9X06Y_02.22.12.00
+RootFS Ver: SWI9X06Y_02.32.02.00 2019-10-08_01:04:54
+UserFS Ver: unknown
+MCU Ver: 002.013
+```
+
+```
+root@swi-mdm9x28-wp:~# cm info
+Device:                        WP7702
+IMEI:                          352653090215245
+IMEISV:                        4
+FSN:                           4L936370140910
+Firmware Version:              SWI9X06Y_02.32.02.00 c2e98c jenkins 2019/08/30 07:28:21
+Bootloader Version:            SWI9X06Y_02.32.02.00 c2e98c jenkins 2019/08/30 07:28:21
+MCU Version:                   002.013
+PRI Part Number (PN):          9909138
+PRI Revision:                  001.001
+Carrier PRI Name:              SIERRA
+Carrier PRI Revision:          001.027_000
+SKU:                           1104405
+Last Reset Cause:              Power Down
+Resets Count:                  Expected: 9      Unexpected: 0
+```
+
