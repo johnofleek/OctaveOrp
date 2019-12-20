@@ -94,8 +94,39 @@ At the Cloud (View in Octave web UI)
 
 # Further Info
 
-## Octave add device
+## Octave register device (not reqd EPAS I've done it)
 
+### Config mangOH yellow
+Set the switches and connect the internal antenna
+
+* Connect external LTE antenna to MAIN connector  
+* Enable external LTE antenna  SW403-5 to ON
+* MAIN power switch ON
+
+
+For Windows host machines Load Sierra driver for WP7702 from https://source.sierrawireless.com/
+
+Power MangOH yellow via USB socket in narrow side of the board
+
+Over AT command port use ati command to retrieve FSN and IMEI
+
+Go to the octave 
+https://octave.sierrawireless.io/
+
+Add the device
+
+ssh into the mangOH
+After a while attempt a data connection - this seems to speed up the
+ provisioning process
+
+```
+cm data connect
+``` 
+
+This most likely will fail but the Octave web UI probably now indicates
+ a provisioned device
+
+## useful commands
 SIM ID  
 ```
 at+ccid
@@ -121,7 +152,7 @@ FSN: 4L936370140910
 +GCAP: +CGSM,+DS
 ```
 
-Go to https://octave.sierrawireless.io/device/new
+
 
 
 
@@ -155,4 +186,34 @@ SKU:                           1104405
 Last Reset Cause:              Power Down
 Resets Count:                  Expected: 9      Unexpected: 0
 ```
+
+
+
+## actual image used for demo
+
+Why? - because the default doesn't support ORP 
+
+Image is 
+```
+module-2.1.0.wp77xx.spk
+```
+
+Programming use windows powershell with this 
+
+```
+ls 
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----       28/02/2019     11:09         664056 fdt2.exe
+-a----       28/02/2019     10:08        1583608 GobiApi.dll
+-a----       19/12/2019     14:57       64543870 module-2.1.0.wp77xx.spk
+```
+and program mangOH like this
+
+```
+./fdt2.exe module-2.1.0.wp77xx.spk
+```
+
+The ORP app causes a Legato restart the first time ever - there is a delay while the backend syncs - after that it works
 

@@ -35,7 +35,7 @@ def json_set1_handler():
       "waterLevelLow": False,
       "Turbidity": 45,
       "DissolvedOxygen": 78,
-      "Debris": true,
+      "Debris": True,
       "flowIn": 12.5,
       "flowOut": 11.8
     }
