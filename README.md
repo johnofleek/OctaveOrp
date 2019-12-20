@@ -109,6 +109,8 @@ At the Cloud (View in Octave web UI)
 
 # Further Info
 
+Shouldn't be needed by EPAS
+
 ## Octave register device (not reqd EPAS I've done it)
 
 ### Config mangOH yellow
