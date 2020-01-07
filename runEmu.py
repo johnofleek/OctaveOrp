@@ -17,43 +17,48 @@ DEV = os.getenv('DEV', 'COM11')
 s = Serial(DEV)
 sbs = SbSerial(s)
 
-# Handles request for platform resource
-def string_platform_handler():
-    return platform()
-
-# Handles request for JSON resource
-def json_vmem_handler():
-    mem = virtual_memory()
-    return dumps({ 'total': mem.total, 'available': mem.available })
 
 
-def json_set1_handler():
+def json_measurement_handler():
     # note python dict has bool True/False JSON true/False
     dictPayload = {
-      "temperature": 123.2,
-      "waterLevelHigh": True,
-      "waterLevelLow": False,
-      "Turbidity": 45,
-      "DissolvedOxygen": 78,
-      "Debris": True,
-      "flowIn": 12.5,
-      "flowOut": 11.8
+        "temperature": 123.2,
+        "waterLevelHigh": True,
+        "waterLevelLow": False,
+        "Turbidity": 45,
+        "DissolvedOxygen": 78,
+        "Debris": True,
+        "flowIn": 12.5,
+        "flowOut": 11.8
+    }
+    # return dictionary convert to JSON
+    return dumps(dictPayload)
+    
+def json_settings_handler():
+    # note python dict has bool True/False JSON true/False
+    dictPayload = {
+        "Fog_roller_OFF":300,
+        "Fog_roller_ON":300,
+        "Recirculation_OFF":90,
+        "Recirculation_ON":10,
+        "Service_pump_OFF":2550,
+        "Service_pump_ON":90,
+        "Solenoid_valve_OFF":2550,
+        "Solenoid_valve_ON":120,
+        "cleaningCycles":3,
+        "unitOFF":2,
+        "unitON":7
     }
     # return dictionary convert to JSON
     return dumps(dictPayload)
 
 # Create sensor objects with SbSerial connection, callback, type,
 # resource path, and optionally unit of measure
-'''
-sensors = [
-    Sensor(sbs, string_platform_handler, 'string', 'system/platform', 'alphabet'),
-    Sensor(sbs, cpu_percent, 'num', 'system/cpu', 'percent'),
-    Sensor(sbs, json_vmem_handler, 'json', 'system/mem')
-]
-'''
+
 
 sensors = [
-    Sensor(sbs, json_set1_handler, 'json', 'sensors/set1')
+    Sensor(sbs, json_measurement_handler, 'json', 'sensors/uplinkMeasured'),
+    Sensor(sbs, json_settings_handler, 'json', 'sensors/controlSettings')
 ]
 
 [sensor.create_sensor() for sensor in sensors]
