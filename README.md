@@ -7,6 +7,13 @@ The app was tested on a Windows 10 PC and used a mangOH Yellow / WP7702
  board as the edge device
  
 Python demo runs on serial port connected remote machine
+
+# current demo
+Is emulateSystem.py
+
+```
+python emulateSystem.py
+```
  
  
 # Install 
