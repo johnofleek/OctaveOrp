@@ -115,6 +115,7 @@ class Sensor(object):
         self.orp.create_sensor(self.datatype, self.path, self.unit, self.handler)
         self.declared = True
 
+
 class Output(object):
 
     def __init__(self, orp, handler, datatype, path, unit=None):

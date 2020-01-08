@@ -1,5 +1,8 @@
-# sample.py 
-# from https://docs.octave.dev/references/edge/octave_resource_protocol/#octave_rppy
+# emulateSystem.py 
+#  https://docs.octave.dev/references/edge/octave_resource_protocol/#octave_rppy
+# This is a crude emulation of the data that an external micro transacts with OctaveRP
+#   There is micro --> Octave data and Octave <-- micro data
+#   The data payloads are in JSON format - this may be tricky for the micro to handle
 
 import os
 from json import dumps
@@ -18,38 +21,42 @@ DEV = os.getenv('DEV', 'COM11')
 s = Serial(DEV)
 orp = OctaveRP(s)
 
-#
+# Global data for simplicity
+# note python dict has bool True/False JSON true/False
+
+measurementData = {
+    "temperature": 123.2,
+    "waterLevelHigh": True,
+    "waterLevelLow": False,
+    "Turbidity": 45,
+    "DissolvedOxygen": 78,
+    "Debris": True,
+    "flowIn": 12.5,
+    "flowOut": 11.8
+}
+
+settingsData = {
+    "Fog_roller_OFF":300,
+    "Fog_roller_ON":300,
+    "Recirculation_OFF":90,
+    "Recirculation_ON":10,
+    "Service_pump_OFF":2550,
+    "Service_pump_ON":90,
+    "Solenoid_valve_OFF":2550,
+    "Solenoid_valve_ON":120,
+    "cleaningCycles":3,
+    "unitOFF":2,
+    "unitON":7
+}
+
+# Send measurement data from the micro to Octave
 def json_measurement_handler():
-    # note python dict has bool True/False JSON true/False
-    dictPayload = {
-        "temperature": 123.2,
-        "waterLevelHigh": True,
-        "waterLevelLow": False,
-        "Turbidity": 45,
-        "DissolvedOxygen": 78,
-        "Debris": True,
-        "flowIn": 12.5,
-        "flowOut": 11.8
-    }
-    # return dictionary convert to JSON
-    return dumps(dictPayload)
+    # return dictionary converted to JSON
+    return dumps(measurementData)
 #    
 def json_settings_handler():
-    # note python dict has bool True/False JSON true/False
-    dictPayload = {
-        "Fog_roller_OFF":300,
-        "Fog_roller_ON":300,
-        "Recirculation_OFF":90,
-        "Recirculation_ON":10,
-        "Service_pump_OFF":2550,
-        "Service_pump_ON":90,
-        "Solenoid_valve_OFF":2550,
-        "Solenoid_valve_ON":120,
-        "cleaningCycles":3,
-        "unitOFF":2,
-        "unitON":7
-    }
-    return dumps(dictPayload)
+    # return dictionary converted to JSON
+    return dumps(settingsData)
     
 
 # Create sensor objects with SbSerial connection, callback, type,
@@ -78,6 +85,7 @@ output.create_output()
 while True:
     try:
         sleep(1)
+        
         #push_type_input.send(push_counter)
         #push_counter += 1
         
