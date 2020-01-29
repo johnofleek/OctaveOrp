@@ -15,7 +15,16 @@ Is emulateSystem.py
 python emulateSystem.py
 ```
  
- 
+or 
+
+```
+emSysPybv.py
+```
+
+# Physical connection
+See the docs folder
+
+
 # Install 
 
 ## Clone this repo
@@ -24,7 +33,11 @@ python emulateSystem.py
 git clone https://github.com/johnofleek/OctaveOrpPythonDemo
 ```
 
-## Install Python 2.7
+## Python3 version
+This is working on a PC - it was developed to investigate the possibility of deploying on micropython. So far this isn't working due to data fragmentation issues
+
+
+## (Python 2 version) Install Python 2.7
 ```
 https://www.python.org/download/releases/2.7/
 ```
@@ -47,6 +60,8 @@ DEV = os.getenv('DEV', 'COM8')
 ```
 python run.py
 ```
+
+Or what ever version of app you are using
 
 The current app creates the sensor in the Octave system and sends
  one value
