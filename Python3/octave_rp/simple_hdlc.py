@@ -50,8 +50,7 @@ except:                 # oh no its micropython
         
 logger = logging.getLogger(__name__)
 logFile = logging.getLogger('file')
-logFile.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG, filename='serial.log')
-
+#logFile.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG, filename='serial.log')
 logFile.debug("AppStart");
 
 # initialise the crc table once    
