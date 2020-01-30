@@ -53,6 +53,7 @@ orp = OctaveRP(s)
 # Global data for simplicity
 # note python dict has bool True/False JSON true/False
 
+'''
 measurementData = {
     "temperature": 123.2,
     "waterLevelHigh": True,
@@ -77,61 +78,33 @@ settingsData = {
     "unitOFF":2,
     "unitON":7
 }
+'''
 
-# Send measurement data from the micro to Octave
-def json_measurement_handler():
-    # return dictionary converted to JSON
-    return dumps(measurementData)
-#    
-def json_settings_handler():
-    # return dictionary converted to JSON
-    return dumps(settingsData)
-    
-
-# Create sensor objects with SbSerial connection, callback, type, resource path, and optionally unit of measure
-## this example no sensors
-## sensors = [
-##    Sensor(orp, json_measurement_handler, 'json', 'sensors/uplinkMeasured'),
-##    Sensor(orp, json_settings_handler, 'json', 'sensors/controlsettingsUp')
-## ]
-
-
-#[sensor.create_sensor() for sensor in sensors]
+downPath = "dwn/"
+Recirculation_OFF_str = "rof"
 
 ## this callback handler is called when Octave cloud sends some data that matches 'sensors/controlsettingsdownj'
-def print_output(data):
-    print (data)
+def Recirculation_OFF_cbh(data):
+    print ("Recirculation_OFF_cbh", data)
 
 # mimic the settings dictionary but setting values from the cloud
 ## Register callback handler with Octave
-output = Output(orp, print_output, 'json', 'sensors/controlsettingsdownj')
-output.create_output()
+Recirculation_OFF_octave = Output(orp, Recirculation_OFF_cbh, 'num', (downPath + Recirculation_OFF_str))
+Recirculation_OFF_octave.create_output()
 
 
 
-'''
-measurementData = {
-    "temperature": 123.2,
-    "waterLevelHigh": True,
-    "waterLevelLow": False,
-    "Turbidity": 45,
-    "DissolvedOxygen": 78,
-    "Debris": True,
-    "flowIn": 12.5,
-    "flowOut": 11.8
-    "Fog_roller_OFF":300,
-    "Fog_roller_ON":300,
-    "Recirculation_OFF":90,
-    "Recirculation_ON":10,
-    "Service_pump_OFF":2550,
-    "Service_pump_ON":90,
-    "Solenoid_valve_OFF":2550,
-    "Solenoid_valve_ON":120,
-    "cleaningCycles":3,
-    "unitOFF":2,
-    "unitON":7
-}
-'''
+downPath = "dwn/"
+Recirculation_ON_str = "ron"
+
+## this callback handler is called when Octave cloud sends some data that matches 'sensors/controlsettingsdownj'
+def Recirculation_ON_cbh(data):
+    print ("Recirculation_ON_cbh", data)
+
+# mimic the settings dictionary but setting values from the cloud
+## Register callback handler with Octave
+Recirculation_ON_octave = Output(orp, Recirculation_ON_cbh, 'num', (downPath + Recirculation_ON_str))
+Recirculation_ON_octave.create_output()
 
 up={}   # dictionary
         # note it seems paths must be alpha chars only
@@ -169,7 +142,7 @@ up["flowOut"].send(23)
 # Run Forever
 while True:
     try:
-        sleep(5)
+        sleep(10)
         turbidity = random.randrange(20,50,1)
         DissolvedOxygen = random.randrange(40,60,1)
        

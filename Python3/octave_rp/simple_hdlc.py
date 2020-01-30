@@ -130,7 +130,7 @@ class HDLC(object):
         bs = self._encode(self.toBytes(data))
         logger.info("Sending Frame: %s", bs)
         res = self.serial.write(bs)
-        logger.info("Send %s bytes", res)
+        # logger.info("Send %s bytes", res)
     
     def _onFrame(self, frame):
         self.last_frame = frame
