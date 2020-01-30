@@ -1,0 +1,16 @@
+
+calcCRC(data) in  b'PN01Psen_temperature/value,D42.1'
+input  b'PN01Psen_temperature/value,D42.1'
+
+b'~IN01Psense1/temperature/value,Unumberz\x83~'
+b'~PN01Psense1/temperature/value,D42.1\x9e*~'
+
+
+
+calcCRC(data) in  b'PN01Psense2/temperature/value,D42.1'
+input  b'PN01Psense2/temperature/value,D42.1'
+
+b'~IN01Psen_temperature/value,Unumber\xe0j~'
+b'~PN01Psen_temperature/value,D42.1\xe0H~'
+
+

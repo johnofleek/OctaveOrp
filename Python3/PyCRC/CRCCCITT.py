@@ -44,7 +44,7 @@ class CRCCCITT(object):
         try:
             is_string = isinstance(input_data, str)
             is_bytes = isinstance(input_data, bytes)
-            print("input " , input_data)
+            # print("input " , input_data)
                 
             if not is_string and not is_bytes:
                 raise Exception("Please provide a string or a byte sequence as argument for calculation.")

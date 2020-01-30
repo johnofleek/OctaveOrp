@@ -53,14 +53,17 @@ logFile = logging.getLogger('file')
 #logFile.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG, filename='serial.log')
 logFile.debug("AppStart");
 
+logger.setLevel(logging.DEBUG)
+logger.debug("simple_hdlc")
+
 # initialise the crc table once    
 crcccitt = CRCCCITT("FFFF")
 
 def calcCRC(data):
-    print("calcCRC(data) in ", data)
+    # print("calcCRC(data) in ", data)
     # crc = CRCCCITT("FFFF").calculate(data) # original inits crc every time
     crc = crcccitt.calculate(data)
-    print ("calcCRC -> crc ", crc )
+    # print ("calcCRC -> crc ", crc )
     b = bytearray(struct.pack(">H", crc))
     return b
 
@@ -95,7 +98,7 @@ class Frame(object):
         self.finished = True
 
     def checkCRC(self):
-        print("simple_hdlc - Frame - checkCRC()", self.data)
+        # print("simple_hdlc - Frame - checkCRC()", self.data)
         res = bool(self.crc == calcCRC(bytes(self.data))) ## changed to this due to Python 3
         if not res:
             c1 = str(self.crc)
@@ -208,7 +211,7 @@ class HDLC(object):
 
     @classmethod
     def _encode(cls, bs):
-        print("_encode()",  bs)
+        # print("_encode()",  bs)
         data = bytearray()
         data.append(0x7E)
         crc = calcCRC(bs)
