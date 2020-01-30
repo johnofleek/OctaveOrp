@@ -6,7 +6,7 @@
 ## note on data types - the following types are supported
 '''
 'trig'  ## not sure
-'bool'  ## not sure if this is JSON true / false or Python True / False 
+'bool'  ## Python True / False 
 'num'   ## Float or Integer - watch out for rounding issues if using python maths 
            e.g.
              0.1 + 0.2
