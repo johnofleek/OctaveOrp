@@ -1,4 +1,4 @@
-# emulateSystem.py 
+# simpleData.py 
 #  https://docs.octave.dev/references/edge/octave_resource_protocol/#octave_rppy
 # This is a crude emulation of the data that an external micro transacts with OctaveRP
 #   There is micro --> Octave data and Octave <-- micro data
