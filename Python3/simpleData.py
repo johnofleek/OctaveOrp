@@ -83,7 +83,7 @@ settingsData = {
 downPath = "dwn/"
 Recirculation_OFF_str = "rof"
 
-## this callback handler is called when Octave cloud sends some data that matches 'sensors/controlsettingsdownj'
+## this callback handler is called when Octave cloud sends some data that matches 
 def Recirculation_OFF_cbh(data):
     print ("Recirculation_OFF_cbh", data)
 
@@ -97,7 +97,7 @@ Recirculation_OFF_octave.create_output()
 downPath = "dwn/"
 Recirculation_ON_str = "ron"
 
-## this callback handler is called when Octave cloud sends some data that matches 'sensors/controlsettingsdownj'
+## this callback handler is called when Octave cloud sends some data that matches 
 def Recirculation_ON_cbh(data):
     print ("Recirculation_ON_cbh", data)
 
