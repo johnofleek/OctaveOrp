@@ -2,7 +2,7 @@ import os
 from json import dumps
 import logging
 from platform import platform
-from psutil import cpu_percent, virtual_memory
+# from psutil import cpu_percent, virtual_memory
 from serial import Serial
 from time import sleep
 from sb_serial import Sensor, SbSerial
@@ -11,7 +11,7 @@ from sb_serial import Sensor, SbSerial
 # and the OS
 #DEV = os.getenv('DEV', '/dev/ttyS0')
 #DEV = os.getenv('DEV', '/dev/tty.SLAB_USBtoUART')
-DEV = os.getenv('DEV', 'COM11')  
+DEV = os.getenv('DEV', 'COM1')  
 
 # Create serial object and use it to create SbSerial connection
 s = Serial(DEV)

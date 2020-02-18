@@ -158,4 +158,14 @@ argc: 3
 2020-02-12 20:17:41,321 OctaveRP: recv frame: {'status': 'OK', 'responseType': 'p'}
 
 
+# Wakeup
+
+~~
+~~
+~~
+~~
+~~
+~~
+~SJ01Psensors/set1ýN~~SJ01Psensors/set1ýN~~SJ01Psensors/set1ýN~
+~SJ01Psensors/set1ýN~~SJ01Psensors/set1ýN~~SJ01Psensors/set1ýN~
 
