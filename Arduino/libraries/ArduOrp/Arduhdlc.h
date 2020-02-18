@@ -4,7 +4,7 @@
 #include "Arduino.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include <util/crc16.h>
+// #include <util/crc16.h>
 
 typedef void (* sendchar_type) (uint8_t);
 typedef void (* frame_handler_type)(const uint8_t *framebuffer, uint16_t framelength);

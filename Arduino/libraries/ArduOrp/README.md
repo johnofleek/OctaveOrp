@@ -1,3 +1,15 @@
+# Description
+
+This library is being developed on the Arduino Mega.  
+ 
+When completed it will implement the Sierra Wireless ORP protocol
+ [here](https://docs.octave.dev/references/edge/octave_resource_protocol/#the-octave-resource-protocol)  
+ 
+The library incorporates  a modified version of the Arduino Arduhdlc libray. The main changes are  
+* Renamed the main functions
+* Replaced the CRC method with CCITT FFFF version from here *crcccitt.cpp*
+
+
 # Arduhdlc
 
 ArduHDLC is a *Simple Arduino HDLC library*. It can be used over any interface like USART, SPI, CAN or I2C.
@@ -13,7 +25,8 @@ To use the library, user must pass all incoming data to charReceiver() function,
  1. Function to send HDLC frame out, one byte at a time.
  2. Function to handle/receive a valid HDLC frame
  
-When HDLC frame is being built around user data (say, "ABCD"), user defined function is called for each byte of the frame. For "ABCD" 8 bytes are sent out, frame being "\~ABCD??~" where the two characters before end flag ~ are two non printable bytes/characters from 16bit CRC function. CRC for "ABCD" is 53965, or 0xCD and 0xD2 in Hexadecimal representation.
+When HDLC frame is being built around user data (say, "ABCD"),
+ user defined function is called for each byte of the frame. For "ABCD" 8 bytes are sent out, frame being "\~ABCD??~" where the two characters before end flag ~ are two non printable bytes/characters from 16bit CRC function. CRC for "ABCD" is 53965, or 0xCD and 0xD2 in Hexadecimal representation.
 
 HDLC frame containing "ABCD":
 
