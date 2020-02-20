@@ -67,3 +67,26 @@
 
 // Variable length field separator
 #define SBR_VARLENGTH_SEPARATOR      ','
+
+class orp
+{
+  public:
+    char * payload;
+    size_t payloadSize;
+     
+    orp(char * payload, size_t payloadSize);
+  
+    int16_t wakeup(void);
+  
+    int16_t pushValue( uint8_t dataType, const char *path, const char * data );
+
+    int16_t createResource( char packetType, char dataType, const char *path, const char * units );
+
+  private:
+
+};
+
+
+
+int16_t orp_createResource(char packetType, char dataType, const char *path, const char * units );
+int16_t orp_pushValue(uint8_t dataType, const char *path, const char * data );

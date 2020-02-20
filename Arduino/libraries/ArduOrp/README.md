@@ -1,13 +1,17 @@
 # Description
 
 This library is being developed on the Arduino Mega.  
- 
-When completed it will implement the Sierra Wireless ORP protocol
+It has been modified to be used with the Sierra Wireless Octave Resource Protocol ORP.
+ When completed it will implement the Sierra Wireless ORP protocol
  [here](https://docs.octave.dev/references/edge/octave_resource_protocol/#the-octave-resource-protocol)  
  
 The library incorporates  a modified version of the Arduino Arduhdlc libray. The main changes are  
 * Renamed the main functions
-* Replaced the CRC method with CCITT FFFF version from here *crcccitt.cpp*
+* Replaced the CRC method with CCITT FFFF version from here *crcccitt.cpp* & *checksum.h*
+
+
+
+
 
 
 # Arduhdlc

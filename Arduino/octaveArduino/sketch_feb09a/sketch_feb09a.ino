@@ -1,5 +1,11 @@
+/*
+ * Working a bit better but I'm having some issues with my level shifter
+ * Hence the commented out frame waiting code
+ */
+
+
 #include <Arduhdlc.h>
-#include <checksum.h>
+
 #include <orp.h>
 
 #define MAX_HDLC_FRAME_LENGTH 64
@@ -15,14 +21,17 @@ void hdlc_frame_handler(const uint8_t *data, uint16_t length);
 3. Length of the longest frame used, to allocate buffer in memory */
 Arduhdlc hdlc(&send_character, &hdlc_frame_handler, MAX_HDLC_FRAME_LENGTH);
 
-static char payload[128];
+char payload[128] = "hello";
+
+orp orpO(payload, sizeof(payload));
 
 /* Function to send out one 8bit character */
 void send_character(uint8_t data) {
     Serial2.print((char)data);
 }
 
-
+// quick bodge to handle response frame
+bool respFrame = false;
 
 /* Frame handler function. What to do with received data? */
 void hdlc_frame_handler(const uint8_t *data, uint16_t length) {
@@ -36,74 +45,63 @@ void hdlc_frame_handler(const uint8_t *data, uint16_t length) {
         Serial.print("] ");
     }  
     Serial.println(" ");
+    respFrame = true;
 }
 
-void checkSend(void)
+
+void debugPayload(void)
 {
-  char data[] = "ABCD";
-  
-  hdlc.frameEncode((uint8_t *)data, strlen(data));
+  Serial.print("Payload "); Serial.print(payload); Serial.print(" Len ");Serial.println(strlen(payload));
 }
 
-
-
-int16_t orp_createResource(char packetType, char dataType, const char *path, const char * units )
+void wakeup(void)
 {
-    int16_t retval = -1;
-    retval = snprintf(payload,sizeof(payload),
-            "%c%c01P%s/value,U%s",
-            packetType,
-            dataType,
-            path,
-            units 
-        );
-    Serial.println(sizeof(payload));
-    
-    Serial.println(payload);
-    hdlc.frameEncode((uint8_t *) payload, strlen(payload));
-    
-    /* Response 'i' || 'o' , status, <2bytes ignore>
-    status == @ is OK */
-    return (retval);
+    send_character('~');
+    delay(100);
+    send_character('~');
+    delay(100);
+    send_character('~');
 }
 
-int16_t orp_pushValue(uint8_t dataType, const char *path, const char * data )
-{
-    int16_t retval = -1;
-    char packetType = SBR_PKT_RQST_PUSH;
+void setup() { 
+    pinMode(16, OUTPUT); // Serial port TX to output
+    pinMode(17, INPUT);
+    digitalWrite(17, LOW); // disable internal pullup
     
-    retval = snprintf(payload,sizeof(payload),
-            "%c%c01P%s/value,D%s",
-            packetType,
-            dataType,
-            path,
-            data 
-        );
-    Serial.println(sizeof(payload));
-    Serial.println(payload);
-    hdlc.frameEncode((uint8_t *) payload, strlen(payload));
-    
-    /* Response 'i' || 'o' , status, <2bytes ignore>
-    status == @ is OK */
-    return (retval);
-}
-
-
-void setup() {
-    pinMode(16,OUTPUT); // Serial port TX to output
     // initialize serial port to 9600 baud
     Serial2.begin(9600);
     Serial.begin(115200);
-    Serial.print("init");
+    Serial.println("Init");
     // checkSend();
-    orp_createResource(SBR_PKT_RQST_INPUT_CREATE, SBR_DATA_TYPE_NUMERIC, "val/te", "num"  );
-    Serial.println("done");
+    
+
+    int16_t retVal;
+    // while(respFrame == false)
+    {
+      retVal = orpO.createResource(SBR_PKT_RQST_INPUT_CREATE, SBR_DATA_TYPE_NUMERIC, "val/te", "num"  );
+      Serial.println(retVal);
+      debugPayload();
+      wakeup(); 
+      hdlc.frameEncode((uint8_t *) payload, strlen(payload));
+      delay(500);
+    }
+    respFrame = false;
+  
+    Serial.println("Init done");
 }
 
 
 void loop() {
-  delay(5000);
-  orp_pushValue( SBR_DATA_TYPE_NUMERIC, "val/te" , "25.2" );
+    delay(10000);
+    // while(respFrame == false)
+    {
+      orpO.pushValue(SBR_DATA_TYPE_NUMERIC, "val/te" , "25.2" );
+      debugPayload();
+      wakeup();
+      hdlc.frameEncode((uint8_t *) payload, strlen(payload));
+      delay(2000);
+    }
+    respFrame = false;
 }
 
 

@@ -1,7 +1,7 @@
 #ifndef arduhdlc_h
 #define arduhdlc_h
 
-#include "Arduino.h"
+//#include "Arduino.h"
 #include <stdint.h>
 #include <stdbool.h>
 // #include <util/crc16.h>

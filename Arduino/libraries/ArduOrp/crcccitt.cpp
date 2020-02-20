@@ -103,17 +103,17 @@ static uint16_t crc_ccitt_generic( const unsigned char *input_str, size_t num_by
 	crc = start_value;
 	ptr = input_str;
 
-    Serial.println("CRC");
-    Serial.print(*ptr, HEX);
-    Serial.print(" ");
-    Serial.print(ptr[num_bytes-1], HEX);
+    //Serial.println("CRC");
+    //Serial.print(*ptr, HEX);
+    //Serial.print(" ");
+    //Serial.print(ptr[num_bytes-1], HEX);
 	if ( ptr != NULL ) {
         for (a=0; a<num_bytes; a++) {
             //Serial.print(*ptr, HEX);
             crc = (crc << 8) ^ crc_tabccitt[ ((crc >> 8) ^ (uint16_t) *ptr++) & 0x00FF ];
         }
     }
-    Serial.println("CRE");
+    //Serial.println("CRE");
 
 	return crc;
 

@@ -69,14 +69,14 @@ void Arduhdlc::frameDecode_char(uint8_t data)
     {
                 
         //this->frame_checksum == 
-        Serial.println("EndFr");
-        Serial.print(receive_frame_buffer[frame_position -3], HEX);
-        Serial.println(" ");
+        //Serial.println("EndFr");
+        //Serial.print(receive_frame_buffer[frame_position -3], HEX);
+        //Serial.println(" ");
         this->frame_checksum = crc_ccitt_ffff(receive_frame_buffer, (frame_position - 2)) ;
         
         uint16_t rxChecksum = this->receive_frame_buffer[this->frame_position-2] << 8 ;
         rxChecksum = rxChecksum |(this->receive_frame_buffer[this->frame_position-1] & 0xff);
-        Serial.println("");
+        //Serial.println("");
         for(int i = 0; i < (frame_position - 2); i++)
         {
             Serial.print((char)receive_frame_buffer[i]);
@@ -84,11 +84,11 @@ void Arduhdlc::frameDecode_char(uint8_t data)
             //Serial.print(data[i],HEX);
             //Serial.print(" ");
         }  
-        Serial.println(" ");
+        //Serial.println(" ");
         
         
-        Serial.println(this->frame_checksum, HEX);
-        Serial.println(rxChecksum, HEX);
+        //Serial.println(this->frame_checksum, HEX);
+        //Serial.println(rxChecksum, HEX);
         
         if(this->escape_character == true)
         {
@@ -146,11 +146,11 @@ void Arduhdlc::frameEncode(const uint8_t *framebuffer, uint8_t frame_length)
 
     this->sendchar((uint8_t)FRAME_BOUNDARY_OCTET);
 
-    Serial.print("frame_length");
-    Serial.println(frame_length);
+    //Serial.print("frame_length");
+    //Serial.println(frame_length);
     
     fcs = crc_ccitt_ffff(framebuffer, (frame_length));
-    Serial.println(fcs);
+    //Serial.println(fcs);
 
     while(frame_length)
     {
