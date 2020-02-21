@@ -33,7 +33,9 @@ The git repo also includes libraries that are needed to build the application
 
 ## Github
 
-Current Github location is 
+Current Github location is  
+https://github.com/johnofleek/OctaveOrpPythonDemo
 
+This git contains this Arduino project
 
 

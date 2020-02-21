@@ -1,4 +1,8 @@
-# OctaveOrpPythonDemo
+# Octave Orp Arduino Demo
+Have a look at the Arduino folder for information  
+
+
+# Octave Orp Python Demo
 The purpose of this app is to demonstrate and simulate an external 
  computer sending sensor data via a serial port (UART) to the Octave 
  system
