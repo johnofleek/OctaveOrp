@@ -82,6 +82,7 @@ class orp
 
     int16_t createResource( char packetType, char dataType, const char *path, const char * units );
 
+    int16_t addpushHandler(uint8_t dataType, const char *path);
   private:
 
 };

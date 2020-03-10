@@ -15,7 +15,7 @@
 #define TIME_CALL_MS 1000
 SimpleTimer firstTimer(TIME_CALL_MS);
 
-SimpleTimer secondTimer((uint64_t)TIME_CALL_MS * (uint64_t)120); // measurement data orp rate
+SimpleTimer secondTimer((uint64_t)TIME_CALL_MS * (uint64_t)(60 * 10)); // measurement data orp rate
 
 #define MAX_HDLC_FRAME_LENGTH   128
 #define MAX_ORP_RX_FRAME_LENGTH 128
@@ -34,6 +34,7 @@ static void hdlc_frame_handler(const uint8_t *data, uint16_t length);
 Arduhdlc hdlc(&send_character, &hdlc_frame_handler, MAX_HDLC_FRAME_LENGTH);
 
 static char orp_responseFrame[MAX_ORP_RX_FRAME_LENGTH] = ""; 
+static char orp_rxPayload[MAX_ORP_RX_FRAME_LENGTH] = "";
 static char orp_txPayload[MAX_ORP_TX_FRAME_LENGTH] = "";
 
 orp orpO(orp_txPayload, sizeof(orp_txPayload));
@@ -51,8 +52,21 @@ static void hdlc_frame_handler(const uint8_t *data, uint16_t length) {
     // Do something with data that is in framebuffer
     Serial.println("Frame");
 
-    memcpy(orp_responseFrame, data , sizeof(orp_responseFrame));
-    
+    if (
+        ( data[0] == SBR_PKT_RESP_INPUT_CREATE  ) ||
+        ( data[0] == SBR_PKT_RESP_OUTPUT_CREATE ) ||
+        ( data[0] == SBR_PKT_RESP_HANDLER_ADD   ) ||
+        ( data[0] == SBR_PKT_RESP_HANDLER_REMOVE)
+    )
+    {
+      memcpy(orp_responseFrame, data , sizeof(orp_responseFrame));
+    }
+    else
+    {
+      memcpy(orp_rxPayload, data , sizeof(orp_rxPayload));
+    }
+
+    // debug the raw frame data
     for(uint16_t i = 0; i < length; i++)
     {
         Serial.print((char)orp_responseFrame[i]);
@@ -90,6 +104,26 @@ static void octave_registerInput(void)
     hdlc.frameEncode((uint8_t *) orp_txPayload, strlen(orp_txPayload));
 }
 
+static void octave_registerOutput(void)
+{
+    int16_t retVal;
+    retVal = orpO.createResource(SBR_PKT_RQST_OUTPUT_CREATE, SBR_DATA_TYPE_NUMERIC, "val/od", "num"  );
+    Serial.print("orp encode "); Serial.println(retVal);
+    debugPayload();
+    wakeup(); 
+    hdlc.frameEncode((uint8_t *) orp_txPayload, strlen(orp_txPayload));
+}
+
+
+static void octave_registerOutputCallback(void)
+{
+    int16_t retVal;
+    retVal = orpO.addpushHandler(SBR_DATA_TYPE_NUMERIC, "val/od");
+    Serial.print("orp encode "); Serial.println(retVal);
+    debugPayload();
+    wakeup(); 
+    hdlc.frameEncode((uint8_t *) orp_txPayload, strlen(orp_txPayload));
+}
 
 
 // read the sensor and send the data to Octave
@@ -118,6 +152,7 @@ static void octave_sendInput(void)
     wakeup();
     hdlc.frameEncode((uint8_t *) orp_txPayload, strlen(orp_txPayload));
 }
+
 
 
 /*
@@ -159,12 +194,36 @@ void setup() {
 void loop() 
 {
   static uint8_t state = 0;
+
+  // process orp data responses
   
-  if(orp_responseFrame[0] == 'i')   // very basic response check - needs work
+  if      (orp_rxPayload[0] == SBR_PKT_NTFY_HANDLER_CALL)   // very basic response check - needs work
+  {
+    Serial.println("Octave data Received");
+    for(uint16_t i = 4; i < 10; i++)
+    {
+        Serial.print((char)orp_rxPayload[i]);
+    }
+    Serial.println("");
+    orp_rxPayload[0] = '\0'; 
+  }
+
+  // process orp responses
+  if      (orp_responseFrame[0] == SBR_PKT_RESP_INPUT_CREATE)   // very basic response check - needs work
   {
     state = 1;
     orp_responseFrame[0] = '\0';    // clear frame data 
     octave_sendInput(); // try and send first data set
+  }
+  else if (orp_responseFrame[0] == SBR_PKT_RESP_OUTPUT_CREATE)   // very basic response check - needs work
+  {
+    state = 2;
+    orp_responseFrame[0] = '\0';    // clear frame data   
+  }
+  else if (orp_responseFrame[0] == SBR_PKT_RESP_HANDLER_ADD)   // very basic response check - needs work
+  {
+    state = 3;
+    orp_responseFrame[0] = '\0';    // clear frame data   
   }
 
   if (firstTimer.isReady())
@@ -177,7 +236,13 @@ void loop()
         octave_registerInput();
         break;
       case 1:
-        if(secondTimer.isReady())
+        octave_registerOutput();
+        break;
+      case 2:
+        octave_registerOutputCallback();
+        break;
+      case 3:
+        if(secondTimer.isReady()) // send data to server
         {
           secondTimer.reset();
           octave_sendInput();

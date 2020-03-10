@@ -39,7 +39,7 @@ int16_t orp::createResource( char packetType, char dataType, const char *path, c
             path,
             units 
         );
-    Serial.println(payload);
+    //Serial.println(payload);
     
     /* ORP Response 'i' || 'o' , status, <2bytes ignore>
     status == @ is OK */
@@ -64,4 +64,23 @@ int16_t orp::pushValue(uint8_t dataType, const char *path, const char * data )
     return (retval);
 }
 
- 
+
+int16_t orp::addpushHandler(uint8_t dataType, const char *path)
+{
+    int16_t retval = -1;
+    char packetType = SBR_PKT_RQST_HANDLER_ADD;
+    
+    retval = snprintf(payload, payloadSize,
+            "%c%c01P%s/value",
+            packetType,
+            dataType,
+            path 
+        );
+    
+    /* ORP Response 'i' || 'o' , status, <2bytes ignore>
+    status == @ is OK */
+    return (retval);
+}
+
+
+
