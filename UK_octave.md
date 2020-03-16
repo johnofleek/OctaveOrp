@@ -1,7 +1,8 @@
-2020-03-15
+## 2020-03-15
 There seems to be an issue in the UK with the networks
 See - https://forum.sierrawireless.com/t/octave-uk-radio-registration-problem/19746
 
+## Cellular RAT
 Sometimes times on boot the module fails to network register cycling between
 
 at+creg?
@@ -39,6 +40,22 @@ LTE-NB1
 GSM
 
 OK
+
+AT!SELACQ=GSM,LTE-M1
+OK
+
+AT!SELACQ?
+!SELACQ:
+LTE
+LTE-M1
+LTE-NB1
+GSM
+
+OK
+
+mmmm?
+
+
 AT!SELCIOT?
 Current Operating Mode: 0x2
 
@@ -72,4 +89,13 @@ Status:                        Registered to a roaming network (LE_MRC_REG_ROAMI
 Signal:                        Very strong signal strength (5)
 PS:                            Packet Switched Registered to a roaming network (LE_MRC_REG_ROAMING)
 ```
+
+## Cellular operator
+switch to EE
+at+cops=1,2,23430
+
+switch to auto
+
+at+cops=0
+
 
