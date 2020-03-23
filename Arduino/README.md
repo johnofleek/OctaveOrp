@@ -1,5 +1,7 @@
 # Arduino ORP demo
-This Arduino application reads temperature from a thermistor and sends the temperature value to the Octave cloud.  
+The first Arduino application reads temperature from a thermistor and sends the temperature value to the Octave cloud.  
+
+The second one reads ADC1 - during testing I attached an TMP36 micro power temperature sensor - transmit the ADC1 value over Octave and then in the Octave an Octave cloud action calculates the temperature. There is some info in the docs about the issues with the TMP36 sensor - basically it's a high impedance device and can't be used alone with leads.  
 
 ## Hardware
 This is a list of the hardware used to test the application.  
