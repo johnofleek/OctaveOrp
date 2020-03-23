@@ -1,4 +1,5 @@
 # Create
+```
 remote/val/value
 
 ('Creating', 'waterLevelHigh')
@@ -15,13 +16,17 @@ Response
 <packet type[1]><status[1]><segment[2]><contents[variable]>
 
 i@01
+```
 
 # send bool
+```
 PB01Pval/value,DTrue
 
 Response
 p@01
+```
 
+```
 // input to octave from remote
 // createResource(packetType 'I' || 'O', dataType =  'T' || 'B' || 'N' || 'S' || 'J' <path>[,T<timestamp>][,D<data>]
 // example
@@ -53,8 +58,10 @@ void pushValueToOctave(uint8_t dataType, char *path, char * data )
 
 }
  
+ ```
  
  # captured data 
+ ```
  /*
  * ~ 7E, 
  * I , B , 0 , 1 , P , v , a , l , / , v , a , l , u , e , 
@@ -69,8 +76,9 @@ void pushValueToOctave(uint8_t dataType, char *path, char * data )
  * ⸮ E8, 
  * ~ 7E,
 
+```
 
-
+```
 ~ 7E,  [0] ~ 7E,  [0] ~ 7E,  [0] ~ 7E,  
 [0] I 49,  
 [1] B 42,  
@@ -95,18 +103,18 @@ void pushValueToOctave(uint8_t dataType, char *path, char * data )
 [20] x 78,  
 [21] ~ 7E, 
 */
-
+```
 ## Arduino TX
 
-                                                                        
+```                                                                        
 7E 49 42 30 31 50 76 61 6C 2F 76 61 6C 75 65 2C 55 6E 75 6D 41 C6 7E    
-                                                                    
+```                                                                    
 
 ## Python OP
 
 
 
-
+```
 init128
 IN01Pval/te1/value,Unum
 frame_length23
@@ -122,9 +130,10 @@ CRC
 60263
 128
 PB01Pval/tel/value,D25.2
-
+```
 
 // working data
+```
 2020-02-12 20:17:39,381 OctaveRP: creating input at val/tp
 2020-02-12 20:17:39,585 OctaveRP: sending frame, awaiting i
 ('input ', 'IN01Pval/tp/value,Unum')
@@ -156,10 +165,10 @@ argc: 3
 ('input ', 'p@01')
 ('crcValue ', '0xf8ff')
 2020-02-12 20:17:41,321 OctaveRP: recv frame: {'status': 'OK', 'responseType': 'p'}
-
+```
 
 # Wakeup
-
+```
 ~~
 ~~
 ~~
@@ -168,4 +177,4 @@ argc: 3
 ~~
 ~SJ01Psensors/set1ýN~~SJ01Psensors/set1ýN~~SJ01Psensors/set1ýN~
 ~SJ01Psensors/set1ýN~~SJ01Psensors/set1ýN~~SJ01Psensors/set1ýN~
-
+```
