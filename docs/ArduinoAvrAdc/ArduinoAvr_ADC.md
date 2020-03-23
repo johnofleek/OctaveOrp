@@ -18,7 +18,8 @@ Using a 100mm cable we observed instability in the output voltage. Initially we 
 * Stable only with a load capacitance < 10nF 
 * Cable lengths > a few 10s of mm cause the LM36 output to be unstable (see scope trace)
 
-![supposed to be scope trace here](ArduinoAvr_ADC1_LM36.png) "Scope trace TMP36 100mm cable"
+Scope trace:
+![supposed to be scope trace here](ArduinoAvr_ADC1_LM36.png) "TMP36 100mm cable"
 
 ## Conclusion  
 The TMP36 needs an analog buffer in order to be able to drive wiring > 100mm
