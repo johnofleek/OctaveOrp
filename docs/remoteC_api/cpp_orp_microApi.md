@@ -36,6 +36,7 @@ Octave Edge - this the WP7702 or whatever Octave device is in the field
 Octave Cloud - this is Sierra's cloud compute sytem
 Octave_RemoteMicro_api - the api that is defined in this document
 Octave_RemoteMicro_code - the code which implements the api and the functionality
+Octave resource protocol (ORP) - the serial protocol between the Octave Edge Device and the Remote Device
 
 
 ---
@@ -45,7 +46,7 @@ Octave_RemoteMicro_code - the code which implements the api and the functionalit
 
 KEY / VALUE pairs will be implemented as strings
 
-Values and Keys will be truncated at a size defined by C storage. The
+Values and Keys will be truncated at a size defined by the users C storage. The
  user will need to handle any errors caused by truncation  
 
 
@@ -57,11 +58,36 @@ Data received from Octave is restricted to individual KEY / VALUE pairs. This
  
 My thinking is that if a consistent KEY format is used it will be easy to post
  process the data in the Octave cloud or the edge.
+
+### KEYs
+The same KEY formats should work for both input and output transactions
+
+A suggestion is that a meaningful KEY name is used which describes both the function and the datatype. 
+The remote key will form part of the Octave device path 
  
-*Example output VALUE*  
+A suggestion is to embed the datatype in the KEY path   
+```
+str  
+num    
+bool  
+```
+
+A remote KEY example  
+```
+adc1/num
+```  
+
+
+Results in an Octave device path   
+```
+/remote/adc1/num/value
+```
+ 
+### ORP output VALUE 
 Note that strings have been used to represent all types.
 
 Numbers - expect a float
+```
 "101"  
 "23.27"    
 
@@ -71,34 +97,26 @@ Strings
 Bool  
 "true"  
 "false"  
+```
 
 
-*Example output KEY*  
-A suggestion is that a meaningful KEY name is used which describes both the
- function and the datatype
  
-A suggestion is to embed the datatype in the KEY path   
-str  
-num    
-bool  
-
-
-A remote KEY example
-<dd>adc1/num</dd>  
-
-
-Results in an Octave path   
-    /remote/adc1/num/value
- 
-## Octave inputs
-Data sent to Octave is encoded in simple JSON strings as it's easy to encode
- in C using prebuilt functions like snprintf(). By using
+## ORP inputs - JSON payload
+Values sent to Octave are encoded by the users remote application. It's proposed to only use simple JSON strings 
+as the are easy to encode in C using prebuilt functions like snprintf(). By using
  [JSON](https://www.json.org/json-en.html) the value encoding used in JSON
  can be used as JSON data is supported by the Octave edge system.
- 
-For example the following JSON encoded data could be sent to the Octave edge  
 
+### Example octave JSON input value
+For example the following JSON encoded data could be sent to the Octave edge  
+```
 {“temperature”:123.2,“humidity”:70,“pressure”:9997,“powerOn”:true}
+or 
+{"ADC1":998,"ADC2":102}
+```
+
+### Example octave input KEY
+
 
 
 ## Octave interaction - remote initiated
@@ -108,17 +126,20 @@ The basic Octave ORP cycle is
 
 It is proposed to handle this cycle by implementing the following in the Octave_RemoteMicro_code
 
-* The users remote application calls a Octave_RemoteMicro_Api function which sends
+1. The users remote application calls a Octave_RemoteMicro_Api function which sends
   an ORP message to the Octave Edge device to the serial port and then returns
-* The Octave system then processes the ORP message
-* After the Octave system has finished processing the ORP message it sends 
+1. The Octave system then processes the ORP message
+1. After the Octave system has finished processing the ORP message it sends 
   a response message to the Octave_RemoteMicro_code code via the serial port
-* The Octave_RemoteMicro_code decodes the response message
-* The Octave_RemoteMicro_code calls the appropriate users callback* function which
+1. The Octave_RemoteMicro_code decodes the response message
+1. The Octave_RemoteMicro_code calls the appropriate users callback* function which
   was registered during initialisation of the Octave_RemoteMicro_Api
 
 ## Octave interaction - Octave initiated
-
+1. Octave Edge receives an Octave message from the remote device
+1. Octave Edge sends the message to the remote device via the serial port
+1. The Octave_RemoteMicro_code decodes the ORP message
+1. The Octave_RemoteMicro_code executes any registered callbacks which match the ORP message
 
 
 ---
