@@ -51,17 +51,7 @@ KEY / VALUE pairs will be implemented as strings
 Values and Keys will be truncated at a size defined by the users C storage. The
  user will need to handle any errors caused by truncation  
 
-
-## Octave output data
-
-Data received from Octave is restricted to individual KEY / VALUE pairs. This
- removes the need to decode incoming data in a difficult to parse
- in C format like JSON.
- 
-My thinking is that if a consistent KEY format is used it will be easy to post
- process the data in the Octave cloud or the edge.
-
-### KEYs
+## KEYs
 The same KEY formats should work for both input and output transactions
 
 A suggestion is that a meaningful KEY name is used which describes both the function and the datatype. 
@@ -84,6 +74,16 @@ Results in an Octave device path
 ```
 /remote/adc1/num/value
 ```
+
+## Octave output data
+
+Data received from Octave is restricted to individual KEY / VALUE pairs. This
+ removes the need to decode incoming data in a difficult to parse
+ in C format like JSON.
+ 
+My thinking is that if a consistent KEY format is used it will be easy to post
+ process the data in the Octave cloud or the edge.
+
  
 ### ORP output VALUE 
 Note that strings have been used to represent all types.
@@ -104,10 +104,12 @@ Bool
 
  
 ## ORP inputs - JSON payload
-Values sent to Octave are encoded by the users remote application. It's proposed to only use simple JSON strings 
-as the are easy to encode in C using prebuilt functions like snprintf(). By using
- [JSON](https://www.json.org/json-en.html) the value encoding used in JSON
- can be used as JSON data is supported by the Octave edge system.
+Values sent to Octave are encoded by the users remote application. It's proposed to only
+use simple JSON strings
+ as the are easy to encode in C using prebuilt functions like snprintf(). 
+ 
+ By using [JSON](https://www.json.org/json-en.html) the value encoding used in JSON
+ can be used as JSON data is supported by the Octave edge system. 
 
 ### Example octave JSON input value
 For example the following JSON encoded data could be sent to the Octave edge  
@@ -116,9 +118,6 @@ For example the following JSON encoded data could be sent to the Octave edge
 or 
 {"ADC1":998,"ADC2":102}
 ```
-
-### Example octave input KEY
-
 
 
 ## Octave interaction - remote initiated
