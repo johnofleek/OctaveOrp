@@ -31,12 +31,14 @@ It is proposed at this stage to implement a subset of the ORP
 * Octave outputs
 
 # Terms
-Remote - this is the microcontroller
-Octave Edge - this the WP7702 or whatever Octave device is in the field
-Octave Cloud - this is Sierra's cloud compute sytem
-Octave_RemoteMicro_api - the api that is defined in this document
-Octave_RemoteMicro_code - the code which implements the api and the functionality
-Octave resource protocol (ORP) - the serial protocol between the Octave Edge Device and the Remote Device
+| Term                           | Description |
+|:------------------------------ |:--- |
+| Remote                         | this is the microcontroller |
+| Octave Edge                    | this the WP7702 or whatever Octave device is in the field |
+| Octave Cloud                   | this is Sierra's cloud compute system | 
+| Octave_RemoteMicro_api         | the api that is defined in this document |
+| Octave_RemoteMicro_code        | the code which implements the api and the functionality |
+| Octave resource protocol (ORP) | the serial protocol between the Octave Edge Device and the Remote Device |
 
 
 ---
@@ -145,6 +147,8 @@ It is proposed to handle this cycle by implementing the following in the Octave_
 ---
 
 # C API
+
+DO NOT TAKE ANY NOTICE OF THIS SECTION ITS STILL BEING WORKED ON
 
 // Low level platform dependencies
 /// serial port from Octave to Micro
