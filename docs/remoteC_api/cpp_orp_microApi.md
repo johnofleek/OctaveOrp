@@ -46,10 +46,14 @@ It is proposed at this stage to implement a subset of the ORP
 
 # C API design philosophy
 
-KEY / VALUE pairs will be implemented as strings
+Data sets sent over ORP will be implemented as KEY / VALUE pair strings.
 
 Values and Keys will be truncated at a size defined by the users C storage. The
- user will need to handle any errors caused by truncation  
+ user will need to handle any errors caused by truncation.
+ 
+At ORP level the KEY will be the ORP data path and the VALUE will be the ORP payload.
+
+
 
 ## KEYs
 The same KEY formats should work for both input and output transactions
@@ -86,24 +90,28 @@ My thinking is that if a consistent KEY format is used it will be easy to post
 
  
 ### ORP output VALUE 
-Note that strings have been used to represent all types.
+Note that strings have been used to represent all types this is to simplify the interface. They can be reformated locally by the microcontroller code as required.
 
-Numbers - expect a float
+Number examples - expect a float in Octave
 ```
 "101"  
 "23.27"    
+```
 
-Strings
-"powerOff"    
-
-Bool  
+Strings examples
+```
+"powerOff"
+"motorStarted"
+```
+Bool examples 
+```
 "true"  
 "false"  
 ```
 
 
  
-## ORP inputs - JSON payload
+## ORP input data - JSON payload
 Values sent to Octave are encoded by the users remote application. It's proposed to only
 use simple JSON strings
  as the are easy to encode in C using prebuilt functions like snprintf(). 
