@@ -56,7 +56,9 @@ At ORP level the KEY will be the ORP data path and the VALUE will be the ORP pay
 
 
 ## KEYs
-The same KEY formats should work for both input and output transactions
+The same KEY formats should work for both input and output transactions. My thinking
+ is that if a consistent KEY format is used it will be easy to post process the data
+ in the Octave cloud, Octave edge or the microcontroller.
 
 A suggestion is that a meaningful KEY name is used which describes both the function and the datatype. 
 The remote key will form part of the Octave device path 
@@ -81,15 +83,12 @@ Results in an Octave device path
 
 ## Octave output data
 
-Data received from Octave is restricted to individual KEY / VALUE pairs. This
+Data received from Octave is restricted by this project to individual KEY / VALUE pairs. This
  removes the need to decode incoming data in a difficult to parse
  in C format like JSON.
- 
-My thinking is that if a consistent KEY format is used it will be easy to post
- process the data in the Octave cloud or the edge.
 
  
-### ORP output VALUE 
+### Octave output VALUE 
 Note that strings have been used to represent all types this is to simplify the interface. They can be reformated locally by the microcontroller code as required.
 
 Number examples - expect a float in Octave
@@ -111,7 +110,7 @@ Bool examples
 
 
  
-## ORP input data - JSON payload
+## Octave input VALUE - JSON payload
 Values sent to Octave are encoded by the users remote application. It's proposed to only
 use simple JSON strings
  as the are easy to encode in C using prebuilt functions like snprintf(). 
@@ -125,10 +124,16 @@ For example the following JSON encoded data could be sent to the Octave edge
 {“temperature”:123.2,“humidity”:70,“pressure”:9997,“powerOn”:true}
 or 
 {"ADC1":998,"ADC2":102}
+or 
+{"input1":"on"}
 ```
 
 
-## Octave interaction - remote initiated
+## Octave ORP interaction - remote initiated
+This section describes the ORP interface over the serial port.
+In particular the interaction between this projects microcontroller code and
+ the Octave edge remote service
+
 The basic Octave ORP cycle is
 1. Remote sends a message to Octave Edge
 2. Octave edge responds with an ack / nack message
