@@ -83,13 +83,14 @@ Results in an Octave device path
 
 ## Octave output data
 
-Data received from Octave is restricted by this project to individual KEY / VALUE pairs. This
- removes the need to decode incoming data in a difficult to parse
+Data received from Octave is restricted by this project to individual KEY / VALUE
+ pairs. This removes the need to decode incoming data in a difficult to parse
  in C format like JSON.
 
  
 ### Octave output VALUE 
-Note that strings have been used to represent all types this is to simplify the interface. They can be reformated locally by the microcontroller code as required.
+Note that strings have been used to represent all types this is to simplify the
+ interface. They can be reformated locally by the microcontroller code as required.
 
 Number examples - expect a float in Octave
 ```
@@ -111,8 +112,8 @@ Bool examples
 
  
 ## Octave input VALUE - JSON payload
-Values sent to Octave are encoded by the users remote application. It's proposed to only
-use simple JSON strings
+Values sent to Octave are encoded by the users remote application. It's
+ proposed to only use simple JSON strings
  as the are easy to encode in C using prebuilt functions like snprintf(). 
  
  By using [JSON](https://www.json.org/json-en.html) the value encoding used in JSON
@@ -138,7 +139,8 @@ The basic Octave ORP cycle is
 1. Remote sends a message to Octave Edge
 2. Octave edge responds with an ack / nack message
 
-It is proposed to handle this cycle by implementing the following in the Octave_RemoteMicro_code
+It is proposed to handle this cycle by implementing the following in the
+ Octave_RemoteMicro_code
 
 1. The users remote application calls a Octave_RemoteMicro_Api function which sends
   an ORP message to the Octave Edge device to the serial port and then returns
@@ -169,6 +171,8 @@ The target micro provides these functions to the micro Octave remote C code
 serial_rxByte(uint8_t data);
 serial_rxByte(uint8_t data),
 
+
+
 // The micro Octave remote C API
 octave_init(
     &serial_txByte(uint8_t),
@@ -179,13 +183,52 @@ octave_init(
     
 )
 
-// Outputs are output from Octave
-octaveResponse  octave_registerOutput(char * key, outputCallbackHandler);
 
-*prototype of callback*
-void outputCallbackHandler (char * key, char * value);
+## Register inputs
+```
+// orp.h
 
-octaveResponse  octave_registerInput(char * key, char * value);
+typedef void (*octave_response_cbf)(char *);
+
+typedef struct
+{
+	char *keyString;
+	octave_response_cbf userApp_OctaveResponse_cbh;
+} octaveInput_struct;
+
+uint8_t octave_register_inputs(octaveInput_struct *inputKeys, int8_t numberOfInputs);
+
+
+// orp.c
+uint8_t octave_register_inputs(octaveInput_struct *inputKeys, int8_t numberOfInputs)
+{
+	// register the Octave inputs
+	// then exit
+	return(0);
+}
+
+```
+
+```
+// Test the API with a basic c app
+
+// This is the real user application
+// #include "orp.h"
+
+// in the app create an array of structs
+#define NUMBER_OF_INPUTS 5
+
+
+
+void testApi(void)
+{
+	int8_t numberOfInputs = 2;
+	
+	octaveInput_struct octaveInputs_struct[NUMBER_OF_INPUTS];
+	octave_register_inputs( octaveInputs_struct, numberOfInputs);	
+}
+```
+
 
 
 --- 
