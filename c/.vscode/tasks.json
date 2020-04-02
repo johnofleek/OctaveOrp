@@ -7,14 +7,16 @@
             "command": "C:\\mingw32\\bin\\gcc",
             "args": [
                 "-g",
-                "${file}",
+                "${workspaceFolder}\\*.c",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],
             "options": {
                 "cwd": "C:\\mingw32\\bin\\"
-              },
-            "problemMatcher": ["$gcc"],
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
             "group": {
                 "kind": "build",
                 "isDefault": true
