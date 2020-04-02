@@ -15,16 +15,69 @@
 #define NUMBER_OF_INPUTS 5
 
 
+// ----------------------------------------------------------------------------
+// test the orp initialisation functionality
+#define HDLC_FRAMEBUFFER_LENGTH 64
+uint8_t HDLC_frameBuffer[HDLC_FRAMEBUFFER_LENGTH];
+uint16_t HDLC_frameBuffer_length = HDLC_FRAMEBUFFER_LENGTH;
+uint16_t HDLC_maxFrameLength = HDLC_FRAMEBUFFER_LENGTH - 16;
 
-void testApi(void)
+
+uint8_t serial_sendTxByte(uint8_t txByte)
+{
+	return(0);
+}
+
+int16_t serial_rxByte(void)
+{
+	return('?');
+}
+
+void test_orp_init_api(void)
+{
+	octave_init(
+		serial_sendTxByte, //! bind the UART send function
+		serial_rxByte,   //! bind the UART get function
+		HDLC_frameBuffer,        //! user passes in a buffer
+		HDLC_frameBuffer_length,       //! user passes in buffer length 
+		HDLC_maxFrameLength            //! user passes in max frame length (TBD)
+	);
+
+}
+
+// ----------------------------------------------------------------------------
+// test the orp input system
+void adc_json_cbh(char *response)
+{
+
+}
+
+void outputsState_json_cbh(char *response)
+{
+
+}
+
+
+void test_orp_input_api(void)
 {
 	int8_t numberOfInputs = 2;
 	
-	octaveInput_struct octaveInputs_struct[NUMBER_OF_INPUTS];
-	octave_register_inputs( octaveInputs_struct, numberOfInputs);	
+	orp_input_struct octaveInputs_struct[NUMBER_OF_INPUTS];
+
+	octaveInputs_struct[0].keyString = "adc/json";
+	octaveInputs_struct[0].userApp_OctaveResponse_cbh = adc_json_cbh;
+
+	octaveInputs_struct[1].keyString = "opstate/json";
+	octaveInputs_struct[1].userApp_OctaveResponse_cbh = outputsState_json_cbh;
+
+	orp_input_s_register( octaveInputs_struct, numberOfInputs);	
 }
 
+// ----------------------------------------------------------------------------
+// run the tests
 int main()
 {
+	test_orp_init_api();
+	test_orp_input_api();
     printf("Done\r\n");
 }
