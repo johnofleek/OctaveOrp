@@ -1,6 +1,18 @@
-# Octave Orp Arduino Demo
+# Octave ORP - Arduino AVR
+
+This is a work in progress - the original intention was to complete this
+ in C++ but a wider requirement to target microchip PIC (no C++ support)
+ has lead to the development of the C project.  
+
+As the C project progresses I will test it with the Arduino mega2560  
+
 Have a look at the Arduino folder for information  
 
+# Octave ORP - C
+This sub project targets microcontrollers with limited resources.  
+At the moment it is in the API definition phase.  
+
+Have a look at the c folder for information 
 
 # Octave Orp Python Demo
 The purpose of this app is to demonstrate and simulate an external 
