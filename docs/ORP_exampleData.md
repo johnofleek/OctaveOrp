@@ -132,7 +132,7 @@ CRC
 PB01Pval/tel/value,D25.2
 ```
 
-// working data
+##  working data
 ```
 2020-02-12 20:17:39,381 OctaveRP: creating input at val/tp
 2020-02-12 20:17:39,585 OctaveRP: sending frame, awaiting i
@@ -167,7 +167,7 @@ argc: 3
 2020-02-12 20:17:41,321 OctaveRP: recv frame: {'status': 'OK', 'responseType': 'p'}
 ```
 
-# Wakeup
+## Wakeup
 ```
 ~~
 ~~
@@ -179,7 +179,7 @@ argc: 3
 ~SJ01Psensors/set1ýN~~SJ01Psensors/set1ýN~~SJ01Psensors/set1ýN~
 ```
 
-# received from Octave Edge 
+## Received from Octave Edge 
 Generated at cloud - send command
 Received at remote micro and HDLC decoded - output data
 
@@ -188,7 +188,7 @@ Cloud data was
 456
 ```
 
-Could path was
+Cloud path was
 ```
 /remote/val/od/value
 ```
