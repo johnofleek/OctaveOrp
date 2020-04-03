@@ -47,6 +47,7 @@ void test_orp_init_api(void)
 
 // ----------------------------------------------------------------------------
 // test the orp input system
+// dummy callback handlers
 void adc_json_cbh(char *response)
 {
 
@@ -71,6 +72,12 @@ void test_orp_input_api(void)
 	octaveInputs_struct[1].userApp_OctaveResponse_cbh = outputsState_json_cbh;
 
 	orp_input_s_register( octaveInputs_struct, numberOfInputs);	
+
+	//  wait for input registration to complete TBD
+
+	orp_input_send(octaveInputs_struct, 0, "\"jsonKey_test\":\"26.8\"");
+	orp_input_send(octaveInputs_struct, 0, "\"adcArray\":[100,101,102,103,104,105,106,107]"); // not certain this will work
+	
 }
 
 // ----------------------------------------------------------------------------
