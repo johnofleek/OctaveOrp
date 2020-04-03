@@ -4,6 +4,9 @@ This is a work in progress - at the moment the API is being defined.
 
 For info on the API development [click](../docs/remoteC_api/cpp_orp_microApi.md) 
 
+# Current status
+API test orp_api_test.c builds and runs
+The API does nothing at the momeny 
 
 
 # Visual Studio Code
