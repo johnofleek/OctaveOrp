@@ -178,3 +178,22 @@ argc: 3
 ~SJ01Psensors/set1ýN~~SJ01Psensors/set1ýN~~SJ01Psensors/set1ýN~
 ~SJ01Psensors/set1ýN~~SJ01Psensors/set1ýN~~SJ01Psensors/set1ýN~
 ```
+
+# received from Octave Edge 
+Generated at cloud - send command
+Received at remote micro and HDLC decoded - output data
+
+Cloud data was 
+```
+456
+```
+
+Could path was
+```
+/remote/val/od/value
+```
+
+```
+c@01T1585927713.843660,Pval/od/value,D456.000000
+```
+
