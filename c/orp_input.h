@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+
+
 // Input registration call back handler
 // this is called when the Octave Edge device response over ORP
 typedef void (*orp_register_inputResponse_cbf)(char *);
@@ -17,7 +19,7 @@ typedef struct
 } orp_input_struct;
 
 // The input registration request
-uint8_t orp_input_s_register(orp_input_struct *inputKeys, int8_t numberOfInputs);
+uint8_t orp_input_registerJson(orp_input_struct inputKey_struct);
 
 // The Octave input data send Remote device --> Octave Edge device
-uint8_t orp_input_send(orp_input_struct *inputKeys, int8_t inputIndex, char * valueString);
+uint8_t orp_input_sendJson( char * keyString, char * valueString);

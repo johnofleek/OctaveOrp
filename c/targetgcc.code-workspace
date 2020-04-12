@@ -6,7 +6,8 @@
 	],
 	"settings": {
 		"files.associations": {
-			"orp.h": "c"
+			"orp.h": "c",
+			"stdint.h": "c"
 		}
 	}
 }

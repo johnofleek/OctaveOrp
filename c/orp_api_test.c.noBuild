@@ -1,6 +1,9 @@
 #include <stdint.h>
 #include <stdio.h>  // just for printf debug
+#include <string.h>
+
 #include "orp.h"
+#include "hdlc.h"
 
 
 
@@ -15,32 +18,97 @@
 
 // ----------------------------------------------------------------------------
 // test the orp initialisation functionality
+/*
+
 #define HDLC_FRAMEBUFFER_LENGTH 64
 uint8_t HDLC_frameBuffer[HDLC_FRAMEBUFFER_LENGTH];
 uint16_t HDLC_frameBuffer_length = HDLC_FRAMEBUFFER_LENGTH;
 uint16_t HDLC_maxFrameLength = HDLC_FRAMEBUFFER_LENGTH - 16;
 
 
-uint8_t serial_sendTxByte(uint8_t txByte)
-{
-	return(0);
-}
 
-int16_t serial_rxByte(void)
-{
-	return('?');
-}
 
 void test_orp_init_api(void)
 {
+	// I think this is not necessary - use HDLC instead
 	octave_init(
-		serial_sendTxByte, //! bind the UART send function
+		serial_txByte, //! bind the UART send function //
 		serial_rxByte,   //! bind the UART get function
 		HDLC_frameBuffer,        //! user passes in a buffer
 		HDLC_frameBuffer_length,       //! user passes in buffer length 
 		HDLC_maxFrameLength            //! user passes in max frame length (TBD)
 	);
 
+}
+*/
+
+// ----------------------------------------------------------------------------
+// Test HDLC code
+#define HDLC_FRAME_LENGTH_MAX   128
+bool hdlcframeDecoded_flag = false;
+
+void serial_txByte(uint8_t txByte)
+{
+	putchar(txByte);
+}
+
+
+void hdlcDecoded_cbh(const uint8_t *framebuffer, uint16_t framelength)
+{
+	uint8_t ctr = 0;
+
+	printf("RX RAW ORP <");
+	for(ctr = 0; ctr < framelength; ctr++)
+	{
+		printf("%c", framebuffer[ctr]);
+	}
+	printf(">\r\n");
+
+	hdlcframeDecoded_flag = true;
+}
+
+
+
+
+// ~SJ01Psensors/set1²N~
+// SJ01Psensors/set1
+
+// ~HDLC1234567890G¹P~
+// <HDLC1234567890G>
+
+void test_hdlc(void)
+{
+	uint8_t hdlcRxBuffer[HDLC_FRAME_LENGTH_MAX];
+	uint8_t testEncodeData[] = "HDLC1234567890";
+	uint8_t ctr = 0;
+	uint8_t rxBytes[256] = "";
+
+	hdlc_hdlc 
+	(    
+  		serial_txByte,              // encoder - bind send a byte to UART
+  		hdlcDecoded_cbh, 			// decoder - called with payload from decoded HDLC rx frame  
+  		hdlcRxBuffer,               // decoder - working buffer
+  		HDLC_FRAME_LENGTH_MAX      	// decoder - length of working buffer
+	);
+
+	hdlc_frameEncode(testEncodeData, strlen(testEncodeData));
+
+
+	while(hdlcframeDecoded_flag == false)
+	{
+		gets(rxBytes); // dodgy
+		printf("IN %s\n\r", rxBytes);
+
+		for(ctr = 0; ctr < strlen(rxBytes); ctr++)
+		{
+			hdlc_frameDecode_char(rxBytes[ctr]);
+		}
+		
+		// wait for decoded callback to fire
+	}
+	printf("DONE\n\r");
+
+	hdlcframeDecoded_flag = false;
 }
 
 // ----------------------------------------------------------------------------
@@ -58,7 +126,7 @@ void outputsState_json_cbh(char *response)
 
 // in the app create an array of structs
 #define NUMBER_OF_INPUTS 2
-
+/* api changed - rewrite this
 void test_orp_input_api(void)
 {
 	int8_t numberOfInputs = NUMBER_OF_INPUTS;
@@ -72,7 +140,7 @@ void test_orp_input_api(void)
 	orpInputs_struct[1].keyString = "adcarray/json";
 	orpInputs_struct[1].userApp_OctaveResponse_cbh = outputsState_json_cbh;
 
-	orp_input_s_register( orpInputs_struct, numberOfInputs);	
+	orp_input_register( orpInputs_struct, numberOfInputs);	
 
 	//  wait for input registration to complete TBD
 
@@ -81,7 +149,7 @@ void test_orp_input_api(void)
 	
 }
 
-
+*/
 
 // ----------------------------------------------------------------------------
 // Test the Octave outputs --> Remote micro
@@ -120,9 +188,10 @@ void test_orp_output_api(void)
 // run the tests
 int main()
 {
-	printf("Start api test\r\n");
-	test_orp_init_api();
-	test_orp_input_api();
+	printf("\n\rStart api test\r\n");
+	// test_orp_init_api();
+	// test_orp_input_api();
 	test_orp_output_api();
-    printf("Done api test\r\n");
+	test_hdlc();
+    printf("\n\rDone api test\r\n");
 }
