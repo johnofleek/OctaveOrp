@@ -2,7 +2,7 @@
 #include "orp.h"
 
 // debug only
-#ifdef DEBUGSTUFF
+#ifdef DEBUG
 	#include <stdio.h>
 #endif
 // hdlc
@@ -14,7 +14,6 @@ uint8_t orp_input_registerJson(orp_input_struct inputKey_struct)
 {
 	int16_t retVal = 0;
 
-	printf("ii %d", retVal);
 	// reset the registered flag
 	inputKey_struct.orp_input_registered = false;
 
@@ -26,7 +25,6 @@ uint8_t orp_input_registerJson(orp_input_struct inputKey_struct)
 		""
 	); 
 
-	printf("oo %d", retVal);
 	// register the callback handler
 	// TODO:
 

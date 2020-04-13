@@ -11,8 +11,7 @@
 #include <string.h>
 #include <stddef.h>
 
-#include "orp_protocol.h"
-#include "hdlc.h"
+#include "orp.h"
 
 char * txPayload = NULL;
 size_t txPayloadMaxSize = 0;
@@ -42,7 +41,7 @@ int16_t orp_protocol_wakeup(txChar_cb txChar, delay100ms_cb delay100ms)
 int16_t orp_protocol_createResource( char packetType, char dataType, const char *path, const char * units )
 {
     int16_t retval = 0;
-    
+
     // check for no units option
     if(units[0] == '\0')
     {
@@ -62,10 +61,13 @@ int16_t orp_protocol_createResource( char packetType, char dataType, const char 
             units 
         );
     }
-    
+
+
     // hdlc encode and send serial port 
     hdlc_frameEncode((uint8_t *) txPayload, strlen(txPayload));
-    
+
+ 
+
     /* ORP Response 'i' || 'o' , status, <2bytes ignore>
     status == @ is OK */
     return (retval);

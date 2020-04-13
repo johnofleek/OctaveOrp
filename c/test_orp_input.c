@@ -10,7 +10,6 @@
 
 // project specific
 #include "orp.h"
-#include "hdlc.h"
 
 
 // The c app
@@ -41,12 +40,12 @@ static void hdlcDecoded_cbh(const uint8_t *framebuffer, uint16_t framelength)
 {
 	uint8_t ctr = 0;
 
-	printf("RX RAW ORP <");
+	TRACE(("RX RAW ORP <"));
 	for(ctr = 0; ctr < framelength; ctr++)
 	{
 		printf("%c", framebuffer[ctr]);
 	}
-	printf(">\r\n");
+	TRACE((">\r\n"));
 
 	// hdlcframeDecoded_flag = true;
 }
@@ -58,9 +57,11 @@ static void hdlcDecoded_cbh(const uint8_t *framebuffer, uint16_t framelength)
 #define ORP_PROTOCOL_TX_BUFFER_LENGTH 1024
 static uint8_t orpProtocol_txBuffer[ORP_PROTOCOL_TX_BUFFER_LENGTH];
 
-static void init_hdlc(void)
-{
 
+
+
+static void init_orp_protocol(void)
+{
 	hdlc_hdlc 
 	(    
   		serial_txByte,              // encoder - bind send a byte to UART
@@ -69,12 +70,9 @@ static void init_hdlc(void)
   		HDLC_RX_BUFFER_LENGTH      	// decoder - length of working buffer
 	);
 
-}
+	// note the serial_rxByte() needs handling
 
-
-
-static void init_orp_protocol(void)
-{
+	// bind the transmit buffer
 	orp_protocol(orpProtocol_txBuffer, ORP_PROTOCOL_TX_BUFFER_LENGTH);
 }
 
@@ -82,7 +80,7 @@ static void init_orp_protocol(void)
 // Test orp_input 
 static void adc_json_cbh(char *response)
 {
-	printf("jsonCbh <%s>", response);
+	TRACE(("\n\rjsonCbh <%s>\n\r", response));
 }
 
 
@@ -119,12 +117,13 @@ static void test_orp_input(void)
 // run the tests
 int main()
 {
-	printf("\n\rorp_input - Start test\r\n");
+	TRACE(("\n\rorp_input - Start test\r\n"));
 
-	init_hdlc();
 	
+	
+	init_orp_protocol();
 
 	test_orp_input();
 
-    printf("\n\rDone orp_input test\r\n");
+    TRACE(("\n\rDone orp_input test\r\n"));
 }
