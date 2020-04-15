@@ -1,7 +1,8 @@
 
 #include <stdio.h>  // just for printf debug
+#include "orp.h"
 #include "crcccitt.h"
-#include "hdlc.h"
+
 /* HDLC Asynchronous framing */
 /* The frame boundary octet is 01111110, (7E in hexadecimal notation) */
 #define FRAME_BOUNDARY_OCTET 0x7E
@@ -29,8 +30,9 @@ static txChar_cb sendchar_function;
 
 /* User must define a function, that will process the valid received frame */
 /* This function can act like a command router/dispatcher */
-static decoder_callback_type decoded_callback;
+static hdlc_decoder_callback_type decoded_callback;
 // static void sendchar_function(uint8_t data);
+
 
 static bool escape_character;
 static uint8_t * receive_frame_buffer;
@@ -40,9 +42,12 @@ static uint8_t frame_position;
 static uint16_t frame_checksum;
 static uint16_t max_frame_length;
 
+
+// public interface
+
 void hdlc_hdlc ( 
     txChar_cb put_char,
-    decoder_callback_type hdlc_decoded_callback,
+    hdlc_decoder_callback_type hdlc_decoded_callback, 
     uint8_t *rx_frameBuffer,
     uint16_t rx_frameLength
 ) 
@@ -161,3 +166,16 @@ void hdlc_frameEncode(const uint8_t *framebuffer, uint8_t frame_length)
 }
 
 
+void hdlc_wakeup( hdlc_delay100ms_cb delay100ms)
+{
+    int16_t retval = 0;
+
+    sendchar_function('~');
+    delay100ms();
+
+    sendchar_function('~');
+    delay100ms();
+
+    sendchar_function('~');
+    delay100ms();
+}
