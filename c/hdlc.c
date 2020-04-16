@@ -168,8 +168,6 @@ void hdlc_frameEncode(const uint8_t *framebuffer, uint8_t frame_length)
 
 void hdlc_wakeup( hdlc_delay100ms_cb delay100ms)
 {
-    int16_t retval = 0;
-
     sendchar_function('~');
     delay100ms();
 

@@ -6,6 +6,7 @@
             "type": "shell",
             "command": "C:\\mingw32\\bin\\gcc",
             "args": [
+                "-Wall",
                 "-g",
                 "${workspaceFolder}\\*.c",
                 "-o",

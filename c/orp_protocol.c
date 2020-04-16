@@ -19,7 +19,7 @@ static size_t orpProtocol_txPayloadMaxSize = 0;
 
 static void orp_protocol_nullRequestResponse_cb(const uint8_t *buffer, uint16_t bufferLength)    // do nothing if unlinked calls
 {
-    TRACE(("unbound orp_protocol_cb"));
+    TRACE(("unbound orp_protocol_cb %c%c  len %d", buffer[0], buffer[1], bufferLength));
 }
 
 // called in response to an orp request to Octave -- its an ack handler
@@ -75,7 +75,7 @@ void orp_protocol(
     orp_hdlc_tx_cb tx_serial_cb,        // encoder - bind TX a byte to UART
                                         // decoder - no need to bind rx as the HDLC layer has a direct write input 
 
-    hdlc_decoder_callback_type hdlc_decoded_callback, // decoder - frame decoded callback with payload ----- don't need this ??? !!!
+    // hdlc_decoder_callback_type hdlc_decoded_callback, // decoder - frame decoded callback with payload ----- don't need this ??? !!!
     uint8_t *hdlc_rx_buffer,            // decoder - working buffer
     uint16_t hdlc_rx_bufferSize         // decoder - length of working buffer
 )

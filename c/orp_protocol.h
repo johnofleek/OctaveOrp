@@ -164,7 +164,7 @@ void orp_protocol(
         orp_hdlc_tx_cb tx_char_cbh,         // encoder - bind TX a byte to UART
                                             // decoder - no need to bind RX as the HDLC layer has a direct write input 
 
-        hdlc_decoder_callback_type hdlc_decoded_callback, // decoder - frame decoded callback with payload 
+        // hdlc_decoder_callback_type hdlc_decoded_callback, // decoder - frame decoded callback with payload 
         uint8_t *hdlc_rx_buffer,            // decoder - working buffer
         uint16_t hdlc_rx_bufferSize         // decoder - length of working buffer
 );
