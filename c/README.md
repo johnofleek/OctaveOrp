@@ -5,8 +5,12 @@ This is a work in progress - at the moment the API is being defined.
 For info on the API development [click](../docs/remoteC_api/cpp_orp_microApi.md) 
 
 # Current status
-API test orp_api_test.c builds and runs  
-The API does nothing at the moment 
+OctaveOrp/c/AppExamples/ArduinoAvr/test_orp_input.c builds and runs for mingw32 
+
+OctaveOrp/c/AppExamples/ArduinoAvr/sketch_test_orp_lib.ino  
+Builds and runs - is able to send data to Octave. Tested with :
+* Arduino mega2560 +
+* mangOH yellow / Octave edge 2.1.3 
 
 
 # Visual Studio Code
