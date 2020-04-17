@@ -34,8 +34,13 @@
 #ifndef DEF_LIBCRC_CHECKSUM_H
 #define DEF_LIBCRC_CHECKSUM_H
 
-#include <stddef.h>
-#include <stdint.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// #include <stddef.h>
+// #include <stdint.h>
+#include "orp.h"
 
 /*
  * #define CRC_POLY_xxxx
@@ -104,5 +109,9 @@ uint16_t		update_crc_sick(    uint16_t crc, unsigned char c, unsigned char prev_
 
 extern const uint32_t	crc_tab32[];
 extern const uint64_t	crc_tab64[];
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // DEF_LIBCRC_CHECKSUM_H

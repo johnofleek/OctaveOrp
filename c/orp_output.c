@@ -1,4 +1,4 @@
-#include "orp_output.h"
+#include "orp.h"
 
 uint8_t orp_output_s_register(orp_output_struct *outputKeys, int8_t numberOfInputs)
 {

@@ -1,3 +1,6 @@
+#ifndef ORP_H
+#define ORP_H
+
 #define DEBUG
 
 #include "debug.h"
@@ -6,12 +9,15 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "crcccitt.h"
 #include "hdlc.h"
 #include "orp_protocol.h"
 #include "orp_input.h"
 #include "orp_output.h"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*
     *Notes*
@@ -32,3 +38,8 @@
      re-register 
 */
 
+#ifdef __cplusplus
+}
+#endif
+
+#endif // ORP_H

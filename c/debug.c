@@ -3,6 +3,13 @@
 
 #include "debug.h"
 
+#if defined(ARDUINO_ARCH_AVR)
+void db_print(const char *fmt, ...)
+{
+     (void)fmt;     // work around compiler warning
+}
+
+#else
 void db_print(const char *fmt, ...)
 {
     va_list args;
@@ -10,3 +17,4 @@ void db_print(const char *fmt, ...)
     vfprintf(stderr, fmt, args);
     va_end(args);
 }
+#endif

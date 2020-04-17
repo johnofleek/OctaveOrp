@@ -1,6 +1,14 @@
+#ifndef ORP_OUTPUT_H
+#define ORP_OUTPUT_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "orp.h"
 // orp_input.h
-#include <stdint.h>
-#include <stdbool.h>
+// #include <stdint.h>
+// #include <stdbool.h>
 
 // Output registration call back handler prototype
 // this is called when the Octave Edge device response over ORP
@@ -35,3 +43,8 @@ typedef struct
 // The input registration request
 uint8_t orp_output_s_register(orp_output_struct *inputKeys, int8_t numberOfInputs);
 
+#ifdef __cplusplus
+}
+#endif
+
+#endif // ORP_OUTPUT_H

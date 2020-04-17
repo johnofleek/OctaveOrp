@@ -1,3 +1,10 @@
+#ifndef ORP_PROTOCOL_H
+#define ORP_PROTOCOL_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
 * https://docs.octave.dev/references/edge/octave_resource_protocol/#the-octave-resource-protocol
 * https://docs.octave.dev/docs/octave-resource-protocol#section-response-structure
@@ -205,3 +212,9 @@ int16_t orp_protocol_addpushHandler(
 // But with possible unsolicited events as well
 // ideally we need a way to set a flag whilst waiting for an request response ack
 // or maybe the app can decide if it wants to ignore the request response (ack)
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // ORP_PROTOCOL_H

@@ -35,13 +35,13 @@
 #include <stdlib.h>
 #include "crcccitt.h"
 
-
+#define CCITT_TABLE_SIZE	256 //256
 
 static uint16_t		crc_ccitt_generic( const unsigned char *input_str, size_t num_bytes, uint16_t start_value );
 static void         init_crcccitt_tab( void );
 
-static bool         crc_tabccitt_init       = false;
-static uint16_t     crc_tabccitt[256];
+static bool         crc_tabccitt_init       = false;	// 
+static uint16_t     crc_tabccitt[CCITT_TABLE_SIZE]; 	// TODO: remove this big array from here and pass it in 
 
 /*
  * uint16_t crc_xmodem( const unsigned char *input_str, size_t num_bytes );
@@ -98,7 +98,10 @@ static uint16_t crc_ccitt_generic( const unsigned char *input_str, size_t num_by
 	const unsigned char *ptr;
 	size_t a;
 
-	if ( ! crc_tabccitt_init ) init_crcccitt_tab();
+	if ( ! crc_tabccitt_init ) 
+	{
+		init_crcccitt_tab();
+	}
 
 	crc = start_value;
 	ptr = input_str;
@@ -144,7 +147,7 @@ static void init_crcccitt_tab( void ) {
 	uint16_t crc;
 	uint16_t c;
 
-	for (i=0; i<256; i++) {
+	for (i=0; i<CCITT_TABLE_SIZE; i++) {
 
 		crc = 0;
 		c   = i << 8;

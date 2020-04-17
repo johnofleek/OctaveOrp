@@ -2,6 +2,11 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 /* Control whether debugging macros are active at compile time */
 #undef DB_ACTIVE
 #ifdef DEBUG
@@ -25,5 +30,9 @@ void     db_print(const char *fmt, ...);
 #define TRACE(x) \
             do { if (DB_ACTIVE) db_print x; } while (0)
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DEBUG_H */

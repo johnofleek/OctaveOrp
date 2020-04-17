@@ -1,7 +1,7 @@
 
-#include <stdio.h>  // just for printf debug
+//#include <stdio.h>  // just for printf debug
 #include "orp.h"
-#include "crcccitt.h"
+//#include "crcccitt.h"
 
 /* HDLC Asynchronous framing */
 /* The frame boundary octet is 01111110, (7E in hexadecimal notation) */
@@ -83,7 +83,7 @@ void hdlc_frameDecode_char(uint8_t data)
             uint16_t rxChecksum = receive_frame_buffer[frame_position-2] << 8 ;
             rxChecksum = rxChecksum | (receive_frame_buffer[frame_position-1] & 0xff);
 
-            printf("Check %X RX %X\r\n", frame_checksum, rxChecksum);
+            // printf("Check %X RX %X\r\n", frame_checksum, rxChecksum);
             if(rxChecksum == frame_checksum )
             {
                 // Call the user defined function and pass decoded payloadframe to it 

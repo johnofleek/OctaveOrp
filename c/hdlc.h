@@ -1,8 +1,10 @@
-#ifndef hdlc_h
-#define hdlc_h
+#ifndef HDLC_H
+#define HDLC_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-// #include "orp.h"
 
 typedef void (* txChar_cb) (uint8_t);
 typedef void (* hdlc_decoder_callback_type)(const uint8_t *framebuffer, uint16_t framelength);
@@ -36,9 +38,13 @@ void hdlc_frameDecode_char(uint8_t data);
 */
 void hdlc_frameEncode(const uint8_t *payload_buffer, uint8_t payload_length);
 
+/*
+ * This needs some work as most system will block during the 100ms delay 
+ */
 void hdlc_wakeup( hdlc_delay100ms_cb delay100ms);
 
+#ifdef __cplusplus
+}
+#endif
 
-
-
-#endif // hdlc_h
+#endif // HDLC_H

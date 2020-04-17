@@ -36,7 +36,7 @@ int8_t orp_input_sendJson(
 	char * valueString)
 {
 	orp_protocol_pushValue(
-		SBR_DATA_TYPE_NUMERIC,
+		SBR_DATA_TYPE_JSON,
 		inputKey_struct.keyString,
 		valueString,
 		inputKey_struct.userApp_OctaveResponse_cbh // register the callback handler

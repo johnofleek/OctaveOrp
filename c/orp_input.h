@@ -1,6 +1,12 @@
-// orp_input.h
-#include <stdint.h>
-#include <stdbool.h>
+#ifndef ORP_INPUT_H
+#define ORP_INPUT_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// #include <stdint.h>
+// #include <stdbool.h>
 
 
 
@@ -24,3 +30,9 @@ int8_t orp_input_registerJson(orp_input_struct inputKey_struct);
 
 // The Octave input data send Remote device --> Octave Edge device
 int8_t orp_input_sendJson( orp_input_struct inputKey_struct, char * valueString);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // ORP_INPUT_H
