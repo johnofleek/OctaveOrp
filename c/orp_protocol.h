@@ -130,7 +130,7 @@ typedef void (* orp_delay100ms_cb) (void);  // used for wakeup function
 
 
 /*
-    Current thinking on Response handling.
+    Current thinking on RX data handling.
 
     We have two types of unsolicited data from the Octave Edge device
     1. Notification Packets - these contain payload data sent by the Octave edge
@@ -150,6 +150,14 @@ typedef void (* orp_delay100ms_cb) (void);  // used for wakeup function
     splits them into two types.
     Next question is - what do they call ?
 
+    At the moment plan is to have 2 application callback functions
+    1. appRequestIn_cbf
+    2. appNotificationIn_cbf
+
+    Then some helper functions to decode the cb payload
+    Initially I was thinking of mapping outputs to individual callbacks but i think 
+    it's better of the user app does this by looking at the key (path)
+
     packet structure:
     <packet type[1]><status[1]><segment[2]><contents[variable]>
     
@@ -160,20 +168,34 @@ typedef void (* orp_delay100ms_cb) (void);  // used for wakeup function
     contents    : Packet dependent, variable length
 
 */
-// Use the following as a prototype for all app callbacks 
-typedef void (*orp_protocol_genericRequestResponse_cb)(const uint8_t *buffer, uint16_t bufferLength);
+// Use the following as a prototype for all app response callbacks 
+typedef void (*orp_protocol_genericRequestResponse_cb)
+(
+  const uint8_t *buffer,
+  uint16_t bufferLength
+);
+
+// Use the following as a prototype for all app notification callbacks 
+typedef void (*orp_protocol_genericNotification_cb)
+(
+  const uint8_t *buffer,
+  uint16_t bufferLength
+);
 
 // pass in buffer references 
 void orp_protocol(
-        char * app_orp_inPayload,           // encoder input payload 
-        size_t app_orp_inPayloadSize,       // encoder input payload size
+  char * app_orp_inPayload,           // encoder input payload 
+  size_t app_orp_inPayloadSize,       // encoder input payload size
 
-        orp_hdlc_tx_cb tx_char_cbh,         // encoder - bind TX a byte to UART
-                                            // decoder - no need to bind RX as the HDLC layer has a direct write input 
+  orp_hdlc_tx_cb tx_char_cbh,         // encoder - bind TX a byte to UART
+                                      // decoder - no need to bind RX as the HDLC layer has a direct write input 
 
-        // hdlc_decoder_callback_type hdlc_decoded_callback, // decoder - frame decoded callback with payload 
-        uint8_t *hdlc_rx_buffer,            // decoder - working buffer
-        uint16_t hdlc_rx_bufferSize         // decoder - length of working buffer
+  // hdlc_decoder_callback_type hdlc_decoded_callback, // decoder - frame decoded callback with payload 
+  uint8_t *hdlc_rx_buffer,            // decoder - working buffer
+  uint16_t hdlc_rx_bufferSize,        // decoder - length of working buffer
+
+  orp_protocol_genericRequestResponse_cb  appRequestIn_cbf,     // app function called by rx decoder when response arrives
+  orp_protocol_genericNotification_cb     appNotificationIn_cbf // app function called by rx decoder when Notification arrives
 );
 
 
@@ -186,22 +208,19 @@ void orp_protocol_wakeup( orp_delay100ms_cb);
 int16_t orp_protocol_pushValue(
   uint8_t dataType,
   const char *path,
-  const char * data,
-  orp_protocol_genericRequestResponse_cb callbackFunction // called by rx decoder when response arrives
+  const char * data
 );
 
 int16_t orp_protocol_createResource(
   char packetType,
   char dataType,
   const char *path,
-  const char * units,
-  orp_protocol_genericRequestResponse_cb callbackFunction // called by rx decoder when response arrives
+  const char * units
 );
 
 int16_t orp_protocol_addpushHandler(
   uint8_t dataType,
-  const char *path,
-  orp_protocol_genericRequestResponse_cb callbackFunction // called by rx decoder when response arrives
+  const char *path
 );
 
 
@@ -212,6 +231,9 @@ int16_t orp_protocol_addpushHandler(
 // But with possible unsolicited events as well
 // ideally we need a way to set a flag whilst waiting for an request response ack
 // or maybe the app can decide if it wants to ignore the request response (ack)
+// 
+// We need to implement some Notification and RequestResponse data decode helper functions 
+ 
 
 #ifdef __cplusplus
 }

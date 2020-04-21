@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 #include "crcccitt.h"
 #include "hdlc.h"

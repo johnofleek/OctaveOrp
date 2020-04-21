@@ -5,9 +5,10 @@ This is a work in progress - at the moment the API is being defined.
 For info on the API development [click](../docs/remoteC_api/cpp_orp_microApi.md) 
 
 # Current status
-OctaveOrp/c/AppExamples/ArduinoAvr/test_orp_input.c builds and runs for mingw32 
+*OctaveOrp/c/AppExamples/ArduinoAvr/test_orp_input.c*  
+Builds and runs for mingw32 
 
-OctaveOrp/c/AppExamples/ArduinoAvr/sketch_test_orp_lib.ino  
+*OctaveOrp/c/AppExamples/ArduinoAvr/sketch_test_orp_lib.ino*  
 Builds and runs - is able to send data to Octave. Tested with :
 * Arduino mega2560 +
 * mangOH yellow / Octave edge 2.1.3 
@@ -15,13 +16,13 @@ Builds and runs - is able to send data to Octave. Tested with :
 
 # Visual Studio Code
 
-Configuration  
+## Configuration  
 https://code.visualstudio.com/docs/cpp/config-mingw
 
-## markdown viewer
+## Markdown viewer
 CTRl SHIFT V
 
-## make a symlink in powershell
+## Hint on making a symlink in powershell
 From 
 https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-6
 

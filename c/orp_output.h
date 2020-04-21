@@ -6,42 +6,24 @@ extern "C" {
 #endif
 
 #include "orp.h"
-// orp_input.h
-// #include <stdint.h>
-// #include <stdbool.h>
+
 
 // Output registration call back handler prototype
 // this is called when the Octave Edge device response over ORP
 
-// I think this needs changing to (index , responseCode) 
-typedef void (*orp_register_outputResponse_cbf)(char * );
+// example Notification from Octave Edge
+// c@01T1585927713.843660,Pval/od/value,D456.000000
+// 0x7E,0x63,0x40,0x30,0x31,0x54,0x31,0x35,0x38,0x35,0x39,0x32,0x37,0x37,0x31,0x33,0x2E,0x38,0x34,0x33,0x36,0x36,0x30,0x2C,0x50,0x76,0x61,0x6C,0x2F,0x6F,0x64,0x2F,0x76,0x61,0x6C,0x75,0x65,0x2C,0x44,0x34,0x35,0x36,0x2E,0x30,0x30,0x30,0x30,0x30,0x30,0x53,0x65,0x7E
 
-// As the data is stored in the struct - just pass the index back
-typedef void (*orp_output_unsolicitedData_cbf)(uint8_t idx);
 
-// This struct is created by the used app and passed via registration request
-typedef struct
-{
-	// the key is really the Octave remote ORP sub path
-	char *keyString;
 
-    // this gets populated by the Octave cloud - we need to know the maxsize
-    char *valueString;
-    uint8_t valueString_maxsize;	
 
-	// gets called when the registration is complete
-	orp_register_outputResponse_cbf userApp_OctaveRegistrationResponse_cbh;	
-    
-    // is called whenever Octave sends data to remote
-    // maybe it should 
-    orp_output_unsolicitedData_cbf  userApp_OctaveUnsolicitedResponse_cbh;
-	
-    // true when output was registered with Octave
-    bool orp_output_registered;
-} orp_output_struct;
+// Creates remote resource in the Octave edge device
+int16_t orp_output_create_num(char *keyString);
 
-// The input registration request
-uint8_t orp_output_s_register(orp_output_struct *inputKeys, int8_t numberOfInputs);
+// Registers a callback inside the Octave edge
+// so that the local handler gets called when something changes on the edge device
+int16_t orp_output_registerCallback_num(char *keyString);
 
 #ifdef __cplusplus
 }

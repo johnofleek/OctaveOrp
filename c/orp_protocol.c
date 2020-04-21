@@ -1,11 +1,6 @@
 /*
     Functions that support Octave Resource Protocol ORP 
 */
-
-#ifdef ARDUINO
-//    #include <Arduhdlc.h>
-#endif
-
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -14,10 +9,16 @@
 #include "orp.h"
 
 // local globals for app resources - idea is to minimise these
-static char * orpProtocol_txPayload = "";
-static size_t orpProtocol_txPayloadMaxSize = 0;
+static char * orpProtocol_txBuffer = "";
+static size_t orpProtocol_txBuffer_size = 0;
 
-static void orp_protocol_nullRequestResponse_cb(const uint8_t *buffer, uint16_t bufferLength)    // do nothing if unlinked calls
+
+static void orp_protocol_nullRequestResponse_cb(const uint8_t *buffer, uint16_t bufferLength )    // do nothing if unlinked calls
+{
+    TRACE(("unbound orp_protocol_cb %c%c  len %d", buffer[0], buffer[1], bufferLength));
+}
+
+static void orp_protocol_nullNotification_cb(const uint8_t *buffer, uint16_t bufferLength)
 {
     TRACE(("unbound orp_protocol_cb %c%c  len %d", buffer[0], buffer[1], bufferLength));
 }
@@ -26,7 +27,7 @@ static void orp_protocol_nullRequestResponse_cb(const uint8_t *buffer, uint16_t 
 static orp_protocol_genericRequestResponse_cb orp_currentRequestResponse_cbf = orp_protocol_nullRequestResponse_cb;
 
 // called when a notification arrives from Octave
-static orp_protocol_genericRequestResponse_cb orp_currentNotification_cbf = orp_protocol_nullRequestResponse_cb;
+static orp_protocol_genericNotification_cb orp_currentNotification_cbf = orp_protocol_nullNotification_cb;
 
 
 // static hdlc_decoder_callback_type hdlc_decoded_cbh = NULL; // processes locally hdlc to orp - needs to be a function
@@ -60,7 +61,6 @@ static void hdlc_decoded_cbh(const uint8_t *buffer, uint16_t bufferLength)
             orp_currentRequestResponse_cbf(buffer, bufferLength );
             break;
     } 
-
 }
 
 
@@ -69,27 +69,35 @@ static void hdlc_decoded_cbh(const uint8_t *buffer, uint16_t bufferLength)
 *   Initialise orp and hdlc
 */
 void orp_protocol(
-    char * app_orp_inPayload,           // encoder input payload 
-    size_t app_orp_inPayloadSize,       // encoder input payload size
+    char * app_orp_txBuffer,           // encoder input payload 
+    size_t app_orp_txBuffer_size,       // encoder input payload size
 
     orp_hdlc_tx_cb tx_serial_cb,        // encoder - bind TX a byte to UART
                                         // decoder - no need to bind rx as the HDLC layer has a direct write input 
 
     // hdlc_decoder_callback_type hdlc_decoded_callback, // decoder - frame decoded callback with payload ----- don't need this ??? !!!
-    uint8_t *hdlc_rx_buffer,            // decoder - working buffer
-    uint16_t hdlc_rx_bufferSize         // decoder - length of working buffer
+    uint8_t *hdlc_rxBuffer,            // decoder - working buffer
+    uint16_t hdlc_rxBuffer_size,        // decoder - length of working buffer
+
+    orp_protocol_genericRequestResponse_cb  appRequestIn_cbf, // called by rx decoder when response arrives
+    orp_protocol_genericNotification_cb     appNotificationIn_cbf // called by rx decoder when response arrives
 )
 {
-    orpProtocol_txPayload = app_orp_inPayload;              // used to contain the orp payload which is sent via HDLC
-    orpProtocol_txPayloadMaxSize = app_orp_inPayloadSize;
+    orpProtocol_txBuffer = app_orp_txBuffer;              // used to contain the orp payload which is sent via HDLC
+    orpProtocol_txBuffer_size = app_orp_txBuffer_size;
+
     // Bind the user "app notification callback" handler - this to handle unsolicited messages from Octave
+    orp_currentNotification_cbf = appNotificationIn_cbf;
 
     // Bind the user "app Request_response" callback handler - this is to handle uplink acks (response)
+    orp_currentRequestResponse_cbf = appRequestIn_cbf;
+
+
     hdlc_hdlc (    
         tx_serial_cb,                        // encoder - binds - sends a byte to UART
         hdlc_decoded_cbh,                   // decoder - frame decoded callback with payload 
-        hdlc_rx_buffer,                     // decoder - working buffer
-        hdlc_rx_bufferSize                  // decoder - length of working buffer
+        hdlc_rxBuffer,                     // decoder - working buffer
+        hdlc_rxBuffer_size                  // decoder - length of working buffer
     );
 }
 
@@ -108,24 +116,20 @@ void orp_protocol_wakeup( orp_delay100ms_cb delay100ms) // I'm hoping this will 
 }
 
 
-
 int16_t orp_protocol_createResource(
   char packetType,
   char dataType,
   const char *path,
-  const char * units,
-  orp_protocol_genericRequestResponse_cb callbackFunction // called by rx decoder when response arrives
+  const char * units
 )
 {
     int16_t retval = 0;
-
-    orp_currentRequestResponse_cbf = callbackFunction; // this becomes the app requestReponse ack handler
 
     // check for no units option
     if(units[0] == '\0')
     {
         retval = snprintf(
-                orpProtocol_txPayload, orpProtocol_txPayloadMaxSize, "%c%c01P%s/value",
+                orpProtocol_txBuffer, orpProtocol_txBuffer_size, "%c%c01P%s/value",
                 packetType,
                 dataType,
                 path
@@ -133,7 +137,7 @@ int16_t orp_protocol_createResource(
     }
     else
     {
-        retval = snprintf(orpProtocol_txPayload, orpProtocol_txPayloadMaxSize, "%c%c01P%s/value,U%s",
+        retval = snprintf(orpProtocol_txBuffer, orpProtocol_txBuffer_size, "%c%c01P%s/value,U%s",
             packetType,
             dataType,
             path,
@@ -143,7 +147,7 @@ int16_t orp_protocol_createResource(
 
 
     // hdlc encode and send serial port 
-    hdlc_frameEncode((uint8_t *) orpProtocol_txPayload, strlen(orpProtocol_txPayload));
+    hdlc_frameEncode((uint8_t *) orpProtocol_txBuffer, strlen(orpProtocol_txBuffer));
 
  
 
@@ -155,16 +159,13 @@ int16_t orp_protocol_createResource(
 int16_t orp_protocol_pushValue(
    uint8_t dataType,
    const char *path,
-   const char * data,
-   orp_protocol_genericRequestResponse_cb callbackFunction
+   const char * data
 )
 {
     int16_t retval = 0;
     char packetType = SBR_PKT_RQST_PUSH;
 
-    orp_currentRequestResponse_cbf = callbackFunction; // this becomes the app requestReponse ack handler
-    
-    retval = snprintf(orpProtocol_txPayload, orpProtocol_txPayloadMaxSize,
+    retval = snprintf(orpProtocol_txBuffer, orpProtocol_txBuffer_size,
             "%c%c01P%s/value,D%s",
             packetType,
             dataType,
@@ -172,8 +173,8 @@ int16_t orp_protocol_pushValue(
             data 
         );
     
-        // hdlc encode and send serial port 
-    hdlc_frameEncode((uint8_t *) orpProtocol_txPayload, strlen(orpProtocol_txPayload));
+    // hdlc encode and send serial port 
+    hdlc_frameEncode((uint8_t *) orpProtocol_txBuffer, strlen(orpProtocol_txBuffer));
     /* ORP Response 'i' || 'o' , status, <2bytes ignore>
     status == @ is OK */
     return (retval);
@@ -181,22 +182,22 @@ int16_t orp_protocol_pushValue(
 
 int16_t orp_protocol_addpushHandler(
   uint8_t dataType,
-  const char *path,
-  orp_protocol_genericRequestResponse_cb callbackFunction // called by rx decoder when response arrives
+  const char *path
 )
 {
     int16_t retval = 0;
     char packetType = SBR_PKT_RQST_HANDLER_ADD;
     
-    orp_currentRequestResponse_cbf = callbackFunction; // this becomes the app requestReponse ack handler
-
-    retval = snprintf(orpProtocol_txPayload, orpProtocol_txPayloadMaxSize,
+    retval = snprintf(orpProtocol_txBuffer, orpProtocol_txBuffer_size,
             "%c%c01P%s/value",
             packetType,
             dataType,
             path 
         );
     
+    // hdlc encode and send serial port 
+    hdlc_frameEncode((uint8_t *) orpProtocol_txBuffer, strlen(orpProtocol_txBuffer));
+
     /* ORP Response 'i' || 'o' , status, <2bytes ignore>
     status == @ is OK */
     return (retval);

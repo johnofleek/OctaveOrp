@@ -1,17 +1,34 @@
 #include "orp.h"
 
-uint8_t orp_output_s_register(orp_output_struct *outputKeys, int8_t numberOfInputs)
+// Creates remote resource in the Octave edge device
+int16_t orp_output_create_num(char *keyString)
 {
-	uint8_t loop = 0;
 
-	// reset the registered flag
-	for(loop = 0; loop < numberOfInputs; loop++)
-	{
-		outputKeys[loop].orp_output_registered = false;
-	}
-	// register the Octave outputs
+	// register the Octave output
 	// then exit
-	return(0);
+
+    int16_t retVal;
+	
+	retVal = orp_protocol_createResource(
+		SBR_PKT_RQST_OUTPUT_CREATE,
+		SBR_DATA_TYPE_NUMERIC,
+		keyString,
+		""
+	);
+	return(retVal);
+}
+
+// Registers a callback inside the Octave edge
+// so that the local handler gets called when something changes on the edge device
+int16_t orp_output_registerCallback_num(char *keyString)
+{
+	int16_t retVal;
+
+	retVal = orp_protocol_addpushHandler(
+  		SBR_DATA_TYPE_NUMERIC,
+  		keyString
+	);
+	return(retVal);
 }
 
 
