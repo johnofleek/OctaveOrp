@@ -5,13 +5,53 @@ This is a work in progress - at the moment the API is being defined.
 For info on the API development [click](../docs/remoteC_api/cpp_orp_microApi.md) 
 
 # Current status
-*OctaveOrp/c/AppExamples/ArduinoAvr/test_orp_input.c*  
+*OctaveOrp/c/AppExamples/ArduinoAvr/PC_mingw32/test_orp_input.c*  
 Builds and runs for mingw32 
 
-*OctaveOrp/c/AppExamples/ArduinoAvr/sketch_test_orp_lib.ino*  
-Builds and runs - is able to send data to Octave. Tested with :
-* Arduino mega2560 +
-* mangOH yellow / Octave edge 2.1.3 
+
+*OctaveOrp/c/AppExamples/ArduinoAvr/octaveAdcDemoSketch/octaveAdcDemoSketch.ino*  
+
+Builds and runs - is able to send and receive data to/from Octave. 
+Sends 8 live ADC values to Octave
+Receives one datavalue from Octave
+
+
+Tested with :  
+* Arduino mega2560 +  
+* mangOH yellow / Octave edge 2.1.3  
+
+
+*OctaveOrp/c/AppExamples/ArduinoAvr/octaveDemoSketch/octaveDemoSketch.ino*  
+
+Builds and runs - is able to send and receive data to/from Octave. 
+Sends dummy value to Octave
+Receives one datavalue from Octave
+
+Tested with :  
+* Arduino mega2560 +  
+* mangOH yellow / Octave edge 2.1.3  
+
+
+## Hardware
+This is a list of the hardware used to test the application.  
+
+* Arduino Mega 2560
+* mangOH yellow WP7702(octave_2.1.3_wp77xx Legato version 19.07 Modem firmware version R12)
+* SEEED Grove - Temperature Sensor V1.2 attached to Arduino ADC 0
+
+## Useful websites
+For the cloud data  
+https://octave.sierrawireless.io/  
+Login to the account where the particular mangOH yellow has been registered  
+
+For the temperature sensor  
+http://wiki.seeedstudio.com/Grove-Temperature_Sensor_V1.2/  
+
+For the Arduino mega 2560  
+https://www.arduino.cc/en/Guide/ArduinoMega2560  
+
+For the mangOH yellow  
+https://mangoh.io/mangoh-yellow  
 
 
 # Visual Studio Code
