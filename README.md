@@ -48,6 +48,18 @@ Have a look at the C folder for more information and examples of Arduino
  
 There is some api documentation in the docs/doxy folder
  
+The C project is now working with Arduino AVR mega   
+
+Have a look at the C folder for information  
+
+## Octave ORP - PIC 16
+
+The C code can be built and functions on a PIC 16
+
+## Octave ORP - mingw
+
+The C code can be built using mingw gcc
+
 
 # Octave Orp - Python version
 The purpose of this app is to demonstrate and simulate an external 
