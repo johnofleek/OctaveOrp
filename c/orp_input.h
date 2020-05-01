@@ -16,10 +16,47 @@ extern "C" {
 
 
 // The input registration request
+// ----------------------------------------------------------------------------
+/// Register a JSON input in Octave Remote
+/// 
+/// @param keyString Null terminated string that contains the remote path
+/// @returns A value of orpProtocol_txBuffer_size or more means that the output was truncated
+/// @see orp_protocol()
+// ----------------------------------------------------------------------------
 int8_t orp_input_registerJson(char *keyString);
 
 // The Octave input data send Remote device --> Octave Edge device
+// ----------------------------------------------------------------------------
+/// Sends a JSON string to Octave Remote input
+/// 
+/// @param keyString Null terminated string that contains the remote path
+/// @param valueString Null terminated string that represents a JSON value (see Octave docs)
+/// @returns A value of orpProtocol_txBuffer_size or more means that the output was truncated
+/// @see orp_protocol()
+// ----------------------------------------------------------------------------
 int8_t orp_input_sendJson( char *keyString , char * valueString);
+
+
+// The input registration request
+// ----------------------------------------------------------------------------
+/// Register a numeric input in Octave Remote
+/// 
+/// @param keyString Null terminated string that contains the remote path
+/// @returns A value of orpProtocol_txBuffer_size or more means that the output was truncated
+/// @see orp_protocol()
+// ----------------------------------------------------------------------------
+int8_t orp_input_sendNumeric ( char * keyString, char * valueString);
+
+// The Octave input data send Remote device --> Octave Edge device
+// ----------------------------------------------------------------------------
+/// Sends a numeric value to Octave Remote input
+/// 
+/// @param keyString Null terminated string that contains the remote path
+/// @param valueString Null terminated string that represents a numeric value (see Octave docs)
+/// @returns A value of orpProtocol_txBuffer_size or more means that the output was truncated
+/// @see orp_protocol()
+// ----------------------------------------------------------------------------
+int8_t orp_input_registerNumeric ( char * keyString);
 
 #ifdef __cplusplus
 }

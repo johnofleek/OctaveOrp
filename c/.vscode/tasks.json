@@ -9,6 +9,8 @@
                 "-Wall",
                 "-g",
                 "${workspaceFolder}\\*.c",
+                "-g",
+                "${workspaceFolder}\\AppExamples\\PC_mingw32\\*.c",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],

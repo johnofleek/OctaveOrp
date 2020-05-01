@@ -16,7 +16,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 // hdlc
 
 
-
+// ----------------------------------------------------------------------------
+// JSON
+// ----------------------------------------------------------------------------
 
 int8_t orp_input_registerJson
 (
@@ -45,6 +47,43 @@ int8_t orp_input_sendJson
 {
 	orp_protocol_pushValue(
 		SBR_DATA_TYPE_JSON,
+		keyString,
+		valueString
+		
+	);
+	return(0);
+}
+
+
+
+int8_t orp_input_registerNumeric
+(
+	char * keyString
+)
+{
+	int8_t retVal = 0;
+
+	// register the Octave inputs
+	retVal = orp_protocol_createResource(
+		SBR_PKT_RQST_INPUT_CREATE,
+		SBR_DATA_TYPE_NUMERIC,
+		keyString,
+		""
+	); 
+
+	return(retVal);
+}
+
+
+
+int8_t orp_input_sendNumeric
+(
+	char * keyString,
+	char * valueString
+)
+{
+	orp_protocol_pushValue(
+		SBR_DATA_TYPE_NUMERIC,
 		keyString,
 		valueString
 		

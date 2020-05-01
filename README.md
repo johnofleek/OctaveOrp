@@ -1,32 +1,71 @@
-# Octave ORP - Arduino AVR
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT.
+ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ IN THE SOFTWARE.
 
-This is a work in progress - the original intention was to complete this
+
+# Octave ORP 
+The purpose of the repository is to provide resources for remote
+ devices connected to Sierra Wireless Octave ORP enabled hardware such as
+* mangOH yellow
+* FX30S WP7702
+* WP7702
+
+The *C version* was developed to support limited resource remote microcontrollers  
+  devices such as Microchip AVR and PIC.   
+
+The *Python* remote device folders are present for 2 reasons - 
+please note that it is not currently being maintained.
+It's probable that Sierra Wireless will update their version over time.
+1. Python 2.7 to provided an easy way to access the source 
+1. Python 3.x was need for a demo and is based on the 2.7 version
+
+The *JavaScript* folder ./edgeJavaScript (at the time of writing) contains
+ some Octave edge device JavaScript.
+This may continue if it proves useful. This is executed on the Sierra Wireless edge
+ device not the remote microcontroller / device.
+ 
+Anyone interested in the development, support, use ... of this open
+ source project please get in contact.
+
+# Octave ORP - C
+This is a work in progress. This project targets microcontrollers
+ with limited resources.  
+
+The original intention was to complete this
  in C++ but a wider requirement to target microchip PIC (no C++ support)
  has lead to the development of the C project.  
 
-The C project is now working with Arduino AVR mega   
+The C project is now working with Arduino AVR mega and PIC microcontrollers.  
 
-Have a look at the C folder for information  
+Have a look at the C folder for more information and examples of Arduino
+ and mingw builds.
+ 
+There is some api documentation in the docs/doxy folder
+ 
 
-
-
-# Octave ORP - C
-This sub project targets microcontrollers with limited resources.  
-At the moment it is in the API definition phase.  
-
-Have a look at the c folder for information 
-
-# Octave Orp Python Demo
+# Octave Orp - Python version
 The purpose of this app is to demonstrate and simulate an external 
  computer sending sensor data via a serial port (UART) to the Octave 
- system
+ system.  
+ 
+The Python 2.7 code was taken from Sierra Wireless Octave ORP resources.  
+The Python 3.x code is based on the 2.7 version but runs on Python 2.7.  
+
+An attempt was made to port the code to micro Python but it was  
+ found that a complete rewrite would be needed.
 
 The app was tested on a Windows 10 PC and used a mangOH Yellow / WP7702 
  board as the edge device
  
 Python demo runs on serial port connected remote machine
 
-# current demo
+## Python demos
 Is emulateSystem.py
 
 ```
@@ -39,7 +78,7 @@ or
 emSysPybv.py
 ```
 
-# Physical connection
+# Physical / Hardware connections
 See the docs folder
 
 
@@ -122,8 +161,8 @@ At the Cloud (View in Octave web UI)
       "sensors": {
         "set1": {
           "Debris": true,
-          "DissolvedOxygen": 78,
-          "Turbidity": 45,
+          "Oxygen": 78,
+          "Turbid": 45,
           "flowIn": 12.5,
           "flowOut": 11.8,
           "temperature": 123.2,
@@ -135,12 +174,12 @@ At the Cloud (View in Octave web UI)
   },
   "generatedDate": 1576860651477,
   "hash": null,
-  "id": "e5dfcfbee9ddc52dee6f1a1ac",
+  "id": "e5dfcfbee9ddc52dee6fxxxxx",
   "lastEditDate": null,
   "location": null,
   "metadata": null,
-  "path": "/epas_ltd/devices/brianmangohyellow/set_1",
-  "streamId": "s5dfcf77f0dcf212031fea3fc",
+  "path": "/xxx/devices/mangohyellow/set_1",
+  "streamId": "s5dfcf77f0dcf212031feaxxx",
   "tags": {
   }
 }
@@ -149,9 +188,8 @@ At the Cloud (View in Octave web UI)
 
 # Further Info
 
-Shouldn't be needed by EPAS
 
-## Octave register device (not reqd EPAS I've done it)
+## Octave register device
 
 ### Config mangOH yellow
 Set the switches and connect the internal antenna
@@ -215,85 +253,3 @@ set the uart to ORP
 https://octave.sierrawireless.io/device/services/remote/UART1
 
 
-
-
-# images
-
-## Stock product
-```
-ati8
-Legato Ver: 19.07.0_c8105fef6769b17540226029a5d23d44
-Yocto Ver:  SWI9X06Y_02.32.02.00 2019-10-08_01:04:54
-OS Ver: Linux version 3.18.140 (oe-user@oe-host) (gcc version 7.3.0 (GCC) ) #1 PREEMPT Tue Oct 8 00:58:07 UTC 2019
-LK Ver: SWI9X06Y_02.22.12.00
-RootFS Ver: SWI9X06Y_02.32.02.00 2019-10-08_01:04:54
-UserFS Ver: unknown
-MCU Ver: 002.013
-```
-
-```
-root@swi-mdm9x28-wp:~# cm info
-Device:                        WP7702
-IMEI:                          352653090215245
-IMEISV:                        4
-FSN:                           4L936370140910
-Firmware Version:              SWI9X06Y_02.32.02.00 c2e98c jenkins 2019/08/30 07:28:21
-Bootloader Version:            SWI9X06Y_02.32.02.00 c2e98c jenkins 2019/08/30 07:28:21
-MCU Version:                   002.013
-PRI Part Number (PN):          9909138
-PRI Revision:                  001.001
-Carrier PRI Name:              SIERRA
-Carrier PRI Revision:          001.027_000
-SKU:                           1104405
-Last Reset Cause:              Power Down
-Resets Count:                  Expected: 9      Unexpected: 0
-```
-
-
-
-## actual image used for demo
-
-Why? - because the default doesn't support ORP 
-
-Image is 
-```
-module-2.1.0.wp77xx.spk
-```
-
-Programming use windows powershell with this 
-
-```
-ls 
-
-Mode                LastWriteTime         Length Name
-----                -------------         ------ ----
--a----       28/02/2019     11:09         664056 fdt2.exe
--a----       28/02/2019     10:08        1583608 GobiApi.dll
--a----       19/12/2019     14:57       64543870 module-2.1.0.wp77xx.spk
-```
-and program mangOH like this
-
-```
-./fdt2.exe module-2.1.0.wp77xx.spk
-```
-
-### Device after flashing 
-
-```
-ati8
-Legato Ver: OTVMODULE2.1.0_03288fcd1015098878f8419aa0b052c6
-Yocto Ver:  SWI9X06Y_02.32.02.00 2019-08-30_11:05:02
-OS Ver: Linux version 3.18.140 (oe-user@oe-host) (gcc version 7.3.0 (GCC) ) #1 PREEMPT Fri Aug 30 10:01:23 UTC 2019
-LK Ver: SWI9X06Y_02.32.02.00
-RootFS Ver: SWI9X06Y_02.32.02.00 2019-08-30_11:05:02
-UserFS Ver: unknown
-MCU Ver: 002.013
-
-```
-
-
-The ORP app causes a Legato restart the first time ever - there is a delay while the backend syncs - after that it works
-
-# Link to the original app source
-
-https://docs.octave.dev/references/edge/octave_resource_protocol/#source-code-for-the-demo-application-for-southbound-resource-protocol

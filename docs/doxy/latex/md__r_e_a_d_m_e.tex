@@ -1,0 +1,112 @@
+This is a work in progress -\/ at the moment the A\+PI is being defined. ~\newline
+
+
+For info on the A\+PI development ../docs/remote\+C\+\_\+api/cpp\+\_\+orp\+\_\+micro\+Api.md \char`\"{}click\char`\"{}\hypertarget{md__r_e_a_d_m_e_autotoc_md1}{}\doxysection{Current status}\label{md__r_e_a_d_m_e_autotoc_md1}
+{\itshape Octave\+Orp/c/\+App\+Examples/\+Arduino\+Avr/\+P\+C\+\_\+mingw32/test\+\_\+orp\+\_\+input.\+c} ~\newline
+ Builds and runs for mingw32
+
+{\itshape Octave\+Orp/c/\+App\+Examples/\+Arduino\+Avr/octave\+Adc\+Demo\+Sketch/octave\+Adc\+Demo\+Sketch.\+ino} ~\newline
+
+
+Builds and runs -\/ is able to send and receive data to/from Octave. Sends 8 live A\+DC values to Octave Receives one datavalue from Octave
+
+Tested with \+: ~\newline
+
+\begin{DoxyItemize}
+\item Arduino mega2560 + ~\newline
+
+\item mang\+OH yellow / Octave edge 2.\+1.\+3 ~\newline
+
+\end{DoxyItemize}
+
+{\itshape Octave\+Orp/c/\+App\+Examples/\+Arduino\+Avr/octave\+Demo\+Sketch/octave\+Demo\+Sketch.\+ino} ~\newline
+
+
+Builds and runs -\/ is able to send and receive data to/from Octave. Sends dummy value to Octave Receives one datavalue from Octave
+
+Tested with \+: ~\newline
+
+\begin{DoxyItemize}
+\item Arduino mega2560 + ~\newline
+
+\item mang\+OH yellow / Octave edge 2.\+1.\+3 ~\newline
+
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md2}{}\doxysubsection{Hardware}\label{md__r_e_a_d_m_e_autotoc_md2}
+This is a list of the hardware used to test the application. ~\newline
+
+
+
+\begin{DoxyItemize}
+\item Arduino Mega 2560
+\item mang\+OH yellow W\+P7702(octave\+\_\+2.\+1.\+3\+\_\+wp77xx Legato version 19.\+07 Modem firmware version R12)
+\item S\+E\+E\+ED Grove -\/ Temperature Sensor V1.\+2 attached to Arduino A\+DC 0
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md3}{}\doxysubsection{Useful websites}\label{md__r_e_a_d_m_e_autotoc_md3}
+For the cloud data ~\newline
+ \href{https://octave.sierrawireless.io/}{\texttt{ https\+://octave.\+sierrawireless.\+io/}} ~\newline
+ Login to the account where the particular mang\+OH yellow has been registered ~\newline
+
+
+For the temperature sensor ~\newline
+ \href{http://wiki.seeedstudio.com/Grove-Temperature_Sensor_V1.2/}{\texttt{ http\+://wiki.\+seeedstudio.\+com/\+Grove-\/\+Temperature\+\_\+\+Sensor\+\_\+\+V1.\+2/}} ~\newline
+
+
+For the Arduino mega 2560 ~\newline
+ \href{https://www.arduino.cc/en/Guide/ArduinoMega2560}{\texttt{ https\+://www.\+arduino.\+cc/en/\+Guide/\+Arduino\+Mega2560}} ~\newline
+
+
+For the mang\+OH yellow ~\newline
+ \href{https://mangoh.io/mangoh-yellow}{\texttt{ https\+://mangoh.\+io/mangoh-\/yellow}} ~\newline
+\hypertarget{md__r_e_a_d_m_e_autotoc_md4}{}\doxysection{Visual Studio Code}\label{md__r_e_a_d_m_e_autotoc_md4}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md5}{}\doxysubsection{Configuration}\label{md__r_e_a_d_m_e_autotoc_md5}
+\href{https://code.visualstudio.com/docs/cpp/config-mingw}{\texttt{ https\+://code.\+visualstudio.\+com/docs/cpp/config-\/mingw}}\hypertarget{md__r_e_a_d_m_e_autotoc_md6}{}\doxysubsection{Markdown viewer}\label{md__r_e_a_d_m_e_autotoc_md6}
+C\+T\+Rl S\+H\+I\+FT V\hypertarget{md__r_e_a_d_m_e_autotoc_md7}{}\doxysubsection{Hint on making a symlink in powershell}\label{md__r_e_a_d_m_e_autotoc_md7}
+From \href{https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-6}{\texttt{ https\+://docs.\+microsoft.\+com/en-\/us/powershell/module/microsoft.\+powershell.\+management/new-\/item?view=powershell-\/6}}
+
+Used this to symlink core c code into arduino or other target project
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{New-\/Item -\/ItemType SymbolicLink -\/Path "Link" -\/Target "Target"}
+\end{DoxyCode}
+
+
+Replace the \char`\"{}\+Link\char`\"{} portion with the path to the symbolic link you want to create (including the file name and its extension for files)
+
+Replace the \char`\"{}\+Target\char`\"{} portion with the path (relative or absolute) that the new link refers to.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{New-\/Item -\/ItemType SymbolicLink -\/Path "Link" -\/Target .}
+\end{DoxyCode}
+
+
+Source\+: ~\newline
+ C\+:\textbackslash{}\+Users\textbackslash{}john\textbackslash{}\+Documents\textbackslash{}\+Arduino\textbackslash{}octave\+Arduino\+G\+H2{\ttfamily } ~\newline
+
+
+Destination\+: ~\newline
+ C\+:\textbackslash{}\+Users\textbackslash{}john\textbackslash{}\+Documents\textbackslash{}\+Arduino\textbackslash{}libraries ~\newline
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmd /c mklink}
+\DoxyCodeLine{Creates a symbolic link.}
+\DoxyCodeLine{}
+\DoxyCodeLine{MKLINK [[/D] | [/H] | [/J]] Link Target}
+\DoxyCodeLine{}
+\DoxyCodeLine{        /D      Creates a directory symbolic link.  Default is a file}
+\DoxyCodeLine{                symbolic link.}
+\DoxyCodeLine{        /H      Creates a hard link instead of a symbolic link.}
+\DoxyCodeLine{        /J      Creates a Directory Junction.}
+\DoxyCodeLine{        Link    Specifies the new symbolic link name.}
+\DoxyCodeLine{        Target  Specifies the path (relative or absolute) that the new link}
+\DoxyCodeLine{                refers to.}
+\end{DoxyCode}
+
+
+In my case 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmd /c mklink /d .\(\backslash\)c C:\(\backslash\)Users\(\backslash\)john\(\backslash\)Documents\(\backslash\)Arduino\(\backslash\)octaveArduinoGH2\(\backslash\)c}
+\end{DoxyCode}
+ 

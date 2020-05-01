@@ -26,11 +26,31 @@ extern "C" {
 
 
 // Creates remote resource in the Octave edge device
+// ----------------------------------------------------------------------------
+/// Register a numeric output in Octave Remote
+/// 
+/// @param keyString Null terminated string that contains the remote path
+/// @returns A value of orpProtocol_txBuffer_size or more means that the output was truncated
+/// @see orp_protocol()
+// ----------------------------------------------------------------------------
 int16_t orp_output_create_num(char *keyString);
 
-// Registers a callback inside the Octave edge
-// so that the local handler gets called when something changes on the edge device
+
+
+// ----------------------------------------------------------------------------
+/// Registers a callback inside the Octave edge device
+///
+/// When data arrives on the flow the octave edge device triggers the callback 
+/// registered with orp_protocol()  
+/// callback flow is -- Octave Edge device (WP77xx) --ORP--> Microcontroller 
+/// 
+/// @param keyString Null terminated string that contains the remote path
+/// @returns A value of orpProtocol_txBuffer_size or more means that the output was truncated
+/// @see orp_protocol()
+// ----------------------------------------------------------------------------
 int16_t orp_output_registerCallback_num(char *keyString);
+
+
 
 #ifdef __cplusplus
 }

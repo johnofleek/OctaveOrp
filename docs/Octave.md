@@ -22,4 +22,7 @@ $2 Mbyte
 
 The local edge data and edge compute is not charged for as it never leaves the WP7702.
 
- I think this might present an opportunity for this project as it is basically uncommitted compute power that costs nothing to run, can be updated from the cloud, and can be rewritten to suite the application at any time, even post shipment. The only cost is the message to deliver the code from the cloud to the 
+ I think this might present an opportunity for this project as it is basically
+ uncommitted compute power that costs nothing to run, can be updated from the
+ cloud, and can be rewritten to suite the application at any time, even post shipment.
+ The only cost is the message to deliver the code from the cloud to the device.
