@@ -25,15 +25,27 @@
 var NAVTREE =
 [
   [ "cMicroOrp", "index.html", [
-    [ "Octave remote C code project", "md__r_e_a_d_m_e.html", [
-      [ "Current status", "md__r_e_a_d_m_e.html#autotoc_md1", [
-        [ "Hardware", "md__r_e_a_d_m_e.html#autotoc_md2", null ],
-        [ "Useful websites", "md__r_e_a_d_m_e.html#autotoc_md3", null ]
+    [ "Simple Arduino Timer", "d9/dc5/md_c__app_examples__arduino_avr_libraries__simple_timer-1_80_80__r_e_a_d_m_e.html", [
+      [ "Example", "d9/dc5/md_c__app_examples__arduino_avr_libraries__simple_timer-1_80_80__r_e_a_d_m_e.html#autotoc_md0", null ],
+      [ "License", "d9/dc5/md_c__app_examples__arduino_avr_libraries__simple_timer-1_80_80__r_e_a_d_m_e.html#autotoc_md1", null ]
+    ] ],
+    [ "Octave remote C code project", "d6/db4/md_c__r_e_a_d_m_e.html", [
+      [ "Current status", "d6/db4/md_c__r_e_a_d_m_e.html#autotoc_md3", [
+        [ "Hardware", "d6/db4/md_c__r_e_a_d_m_e.html#autotoc_md4", null ],
+        [ "Useful websites", "d6/db4/md_c__r_e_a_d_m_e.html#autotoc_md5", null ]
       ] ],
-      [ "Visual Studio Code", "md__r_e_a_d_m_e.html#autotoc_md4", [
-        [ "Configuration", "md__r_e_a_d_m_e.html#autotoc_md5", null ],
-        [ "Markdown viewer", "md__r_e_a_d_m_e.html#autotoc_md6", null ],
-        [ "Hint on making a symlink in powershell", "md__r_e_a_d_m_e.html#autotoc_md7", null ]
+      [ "Visual Studio Code", "d6/db4/md_c__r_e_a_d_m_e.html#autotoc_md6", [
+        [ "Configuration", "d6/db4/md_c__r_e_a_d_m_e.html#autotoc_md7", null ],
+        [ "Markdown viewer", "d6/db4/md_c__r_e_a_d_m_e.html#autotoc_md8", null ],
+        [ "Hint on making a symlink in powershell", "d6/db4/md_c__r_e_a_d_m_e.html#autotoc_md9", null ]
+      ] ]
+    ] ],
+    [ "Data Structures", "annotated.html", [
+      [ "Data Structures", "annotated.html", "annotated_dup" ],
+      [ "Data Structure Index", "classes.html", null ],
+      [ "Data Fields", "functions.html", [
+        [ "All", "functions.html", null ],
+        [ "Functions", "functions_func.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
@@ -53,7 +65,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"crcccitt_8c.html"
+"annotated.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

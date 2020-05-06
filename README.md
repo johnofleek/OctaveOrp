@@ -16,7 +16,9 @@ The purpose of the repository is to provide resources for remote
 * FX30S WP7702
 * WP7702
 
-The *C version* was developed to support limited resource remote microcontrollers  
+The [documentation](docs/) is a work in progress
+
+The [*C version*](c/) was developed to support limited resource remote microcontrollers  
   devices such as Microchip AVR and PIC.   
 
 The *Python* remote device folders are present for 2 reasons - 
@@ -46,7 +48,7 @@ The C project is now working with Arduino AVR mega and PIC microcontrollers.
 Have a look at the C folder for more information and examples of Arduino
  and mingw builds.
  
-There is some api documentation in the docs/doxy folder
+There is some api documentation in the docs/doxy folder - this will be added to as the project progresses
  
 The C project is now working with Arduino AVR mega   
 
