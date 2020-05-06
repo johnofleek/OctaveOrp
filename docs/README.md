@@ -17,9 +17,9 @@ Connections are documented below - note that the mangOH is low voltage (LV) and 
 
 Pictures of the completed system
 
-![Photo](./Arduino_yellow.jpg)  
+![Photo](./HardwareArduinoToMangOHyellow/Arduino_yellow.jpg)  
 
-![Detail Photo](./IoT_levelShift.jpg)
+![Detail Photo](./HardwareArduinoToMangOHyellow/IoT_levelShift.jpg)
 
 
 ## Arduino Software
