@@ -16,7 +16,7 @@ The purpose of the repository is to provide resources for remote
 * FX30S WP7702
 * WP7702
 
-The [documentation](docs/) and [doxygen](docs/doxy/html/index.html) are a work in progress
+The [documentation](docs/), [github pages](https://johnofleek.github.io/OctaveOrp/) and [doxygen](docs/doxy/html/index.html) are a work in progress
 
 The [*C version*](c/) was developed to support limited resource remote microcontrollers  
   devices such as Microchip AVR and PIC.   
