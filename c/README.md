@@ -18,7 +18,9 @@ Receives one datavalue from Octave
 
 Tested with :  
 * Arduino mega2560 +  
-* mangOH yellow / Octave edge 2.1.3  
+* mangOH yellow / Octave edge 2.1.3  / Octave edge 2.1.4
+
+Not yet tested with Octave edge 3.0.0
 
 
 *OctaveOrp/c/AppExamples/ArduinoAvr/octaveDemoSketch/octaveDemoSketch.ino*  
