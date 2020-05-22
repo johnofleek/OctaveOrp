@@ -14,6 +14,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <orp_output.h>
 #include <orp_protocol.h>
 
+#include <Wire.h> // Library for I2C communication
+#include <LiquidCrystal_I2C.h> // Library for LCD
+
+#define LCD_LINE_LEN 16
+LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x3F, LCD_LINE_LEN, 2); // Change to (0x27,20,4) for 20x4 LCD.
 /* 
  *  For spec on ORP
  *  https://docs.octave.dev/references/edge/octave_resource_protocol/#orp-api
@@ -29,13 +34,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #define TIME_CALL_MS 1000
 SimpleTimer firstTimer(TIME_CALL_MS);
 
-SimpleTimer secondTimer((uint64_t)TIME_CALL_MS * (uint64_t)(20)); // measurement data orp rate
+SimpleTimer secondTimer((uint64_t)TIME_CALL_MS * (uint64_t)(5*60)); // measurement data orp rate
 
 
 // ----------------------------------------------------------------------------
 // called by HDLC layer to create a 100ms delay
 // ----------------------------------------------------------------------------
 // plaform specific sleep
+// if using a different micro you need to changes this
+// At some point in time this needs modifying because it blocks
 void sleep100ms(void)
 {
   delay(100); 
@@ -86,6 +93,7 @@ void serialEvent2()
 
 static bool orp_requestAck  = false; // 
 
+
 // process Octave request acks
 static void app_requestResponse_cbh(const uint8_t *buffer, uint16_t bufferLength)
 {
@@ -118,6 +126,9 @@ static void app_notification_cbh(const uint8_t *buffer, uint16_t bufferLength)
   Serial.println(" Notify cb");
   
   uint16_t ctr;
+  uint16_t currentDataTypePos = 0;
+
+  lcd.clear();
 
   // decode()
   for (ctr = 0; ctr < bufferLength; ctr++)
@@ -125,16 +136,19 @@ static void app_notification_cbh(const uint8_t *buffer, uint16_t bufferLength)
     if((ctr==3) || (buffer[ctr] == ','))
     {
       ctr++;
-      switch(buffer[ctr])
+      currentDataTypePos = ctr;
+      switch(buffer[currentDataTypePos])
       {
         case 'P':
           Serial.print(("Path "));
+          lcd.setCursor(0, 0);
           break;
         case 'T':
           Serial.print(("Timestamp "));
           break;
         case 'D':
           Serial.print(("Data "));
+          lcd.setCursor(0, 1);
           break;
         default:
           Serial.print(("Unknown "));
@@ -146,6 +160,14 @@ static void app_notification_cbh(const uint8_t *buffer, uint16_t bufferLength)
       {
         // TRACE(("%c",buffer[ctr]));
         Serial.print(( char) buffer[ctr]);
+        // Put the message onto the Arduino LCD
+        if((ctr - (currentDataTypePos+1)) < LCD_LINE_LEN)
+        {
+          if((buffer[currentDataTypePos] == 'P') || (buffer[currentDataTypePos] == 'D'))
+          {
+            lcd.print(( char) buffer[ctr]);
+          }
+        }
         if(( (char) buffer[ctr +1]) == ',')
         {
           Serial.println("");
@@ -164,23 +186,58 @@ static char orpProtocol_txBuffer[ORP_PROTOCOL_TX_BUFFER_LENGTH];
 #define HDLC_RX_BUFFER_LENGTH 256
 static uint8_t hdlc_rxBuffer[HDLC_RX_BUFFER_LENGTH];
 
+static uint16_t     crc_tabccitt[CCITT_TABLE_SIZE];   // size is fixed by crc calculator
+
 static void init_orp_protocol(void)
 {
-  orp_protocol
-  (
-      orpProtocol_txBuffer,           // encoder input payload 
-      ORP_PROTOCOL_TX_BUFFER_LENGTH,  // encoder input payload size
+  orp_protocol(
+    orpProtocol_txBuffer,           // encoder input payload 
+    ORP_PROTOCOL_TX_BUFFER_LENGTH,  // encoder input payload size
 
-      serial_txByte,                  // encoder - bind TX a byte to UART
+    serial_txByte,                  // encoder - bind TX a byte to UART                                      
 
-      hdlc_rxBuffer,                  // decoder - working buffer
-      HDLC_RX_BUFFER_LENGTH,          // decoder - length of working buffer
-      
-      app_requestResponse_cbh,        // decoder request responses from Octave 
-      app_notification_cbh            // decoder notifications from Octave
-    
+    hdlc_rxBuffer,                  // decoder - working buffer
+    HDLC_RX_BUFFER_LENGTH,          // decoder - length of working buffer
+
+    crc_tabccitt,                   // size is fixed by crc calculator
+    CCITT_TABLE_SIZE,     
+
+    app_requestResponse_cbh,        // decoder request responses from Octave 
+    app_notification_cbh            // decoder notifications from Octave
   );
   // note the serial_rxByte() needs handling by the app feeding it data from the serial port
+}
+
+// 12 bit
+static char valAsString[] =  "[0000,0001,0002,0003,0004,0005,0006,0007,0008] ";
+
+static void adcsAsJsonString(void)
+{
+  snprintf(valAsString, sizeof(valAsString),        // need to add check
+          "{\"ad\":[%u,%u,%u,%u,%u,%u,%u,%u]}",
+          analogRead(0), 
+          analogRead(1), 
+          analogRead(2), 
+          analogRead(3), 
+          analogRead(4), 
+          analogRead(5), 
+          analogRead(6), 
+          analogRead(7) 
+  );
+
+  Serial.println(valAsString);
+}
+
+static void lcd_init(void)
+{
+  // Initiate the LCD:
+  lcd.init();
+  lcd.backlight();
+
+  lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
+  lcd.print("Hello"); // Print the string "Hello World!"
+  lcd.setCursor(0, 1); //Set the cursor on the third column and the second row (counting starts at 0!).
+  lcd.print("From John");
 }
 
 // ----------------------------------------------------------------------------
@@ -204,6 +261,10 @@ void setup() {
   // analogReference(EXTERNAL);
 
   init_orp_protocol();
+
+  adcsAsJsonString();
+
+  lcd_init();
   
   Serial.println("setup done");
 }
@@ -211,20 +272,30 @@ void setup() {
 
 
 
+static char ipKeyString[] = "adcs";
+static char opKeyString[] = "motorspd/num";
+static char opKeyString2[] = "txt_str";
+
+void sendAdcValues(void)
+{
+  Serial.println("Send data to json input");
+  adcsAsJsonString();
+  orp_protocol_wakeup( sleep100ms);
+  orp_input_sendJson(ipKeyString, valAsString);
+}
+
 // ----------------------------------------------------------------------------
 // core state machine loop
 // ----------------------------------------------------------------------------
 
-static char ipKeyString[] = "val/adcs";
-static char opKeyString[] = "motorspd/num";
+
 
 void loop() 
 {
   static uint8_t state = 0;
   
-
   if (firstTimer.isReady())
-  {
+  {       
     firstTimer.reset();
     
     switch(state)
@@ -237,14 +308,14 @@ void loop()
         }
         else
         {
-          Serial.println("Create a json input in the Octave edge");
+          Serial.println("Create json input in the Octave edge");
           orp_protocol_wakeup( sleep100ms);     
           orp_input_registerJson(ipKeyString);        
         }
 
         break;
       case 1:
-        // Create a numnber resource in the Octave edge
+        // Create a number resource in the Octave edge
         if(orp_requestAck)
         {
           orp_requestAck = false; 
@@ -261,26 +332,58 @@ void loop()
           // Activate a callback from Octave edge output to micro
           if(orp_requestAck)
           {
-            orp_requestAck = false; 
-            state = 3;          
+            orp_requestAck = false;
+            state = 3;       
           } 
           else
           {
-            Serial.println("Activate a callback from Octave edge output to micro");
-            orp_output_registerCallback_num(opKeyString);  orp_requestAck = false;
+            Serial.println("Activate a number callback from Octave edge output to micro");
+            orp_protocol_wakeup( sleep100ms);
+            orp_output_register_num(opKeyString);  orp_requestAck = false;
           }
           break;
-      case 3:
+       case 3:
+        // Create a number resource in the Octave edge
+        if(orp_requestAck)
+        {
+          orp_requestAck = false; 
+          state = 4;          
+        } 
+        else
+        {
+          Serial.println("Create a string resource in the Octave edge ");
+          orp_protocol_wakeup( sleep100ms);  
+          orp_output_create_string(opKeyString2); orp_requestAck = false; 
+        }
+        break;
+      case 4:
+          // Activate a callback from Octave edge output to micro
+          if(orp_requestAck)
+          {
+            orp_requestAck = false;
+            sendAdcValues();  // workaround potential long delay before first vals are sent 
+            state = 5;       
+          } 
+          else
+          {
+            Serial.println("Activate a string callback from Octave edge output to micro");
+            orp_protocol_wakeup( sleep100ms);
+            orp_output_register_string(opKeyString2);  orp_requestAck = false;
+          }
+          break;
+      case 5:
         if(secondTimer.isReady()) // send data to server
         {
           secondTimer.reset();
-          Serial.println("Send data to json input");
-          orp_protocol_wakeup( sleep100ms);
-          orp_input_sendJson(ipKeyString, (char *) "{\"adc0\":\"1012\"}");
+          sendAdcValues();
         }
         break;
       default:
         state = 0;  
     }
+  }
+  else
+  {
+
   }
 }

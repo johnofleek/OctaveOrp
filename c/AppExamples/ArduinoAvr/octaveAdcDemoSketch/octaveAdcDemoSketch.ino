@@ -29,13 +29,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #define TIME_CALL_MS 1000
 SimpleTimer firstTimer(TIME_CALL_MS);
 
-SimpleTimer secondTimer((uint64_t)TIME_CALL_MS * (uint64_t)(20)); // measurement data orp rate
+SimpleTimer secondTimer((uint64_t)TIME_CALL_MS * (uint64_t)(5*60)); // measurement data orp rate
 
 
 // ----------------------------------------------------------------------------
 // called by HDLC layer to create a 100ms delay
 // ----------------------------------------------------------------------------
 // plaform specific sleep
+// if using a different micro you need to changes this
+// At some point in time this needs modifying because it blocks
 void sleep100ms(void)
 {
   delay(100); 
@@ -164,21 +166,24 @@ static char orpProtocol_txBuffer[ORP_PROTOCOL_TX_BUFFER_LENGTH];
 #define HDLC_RX_BUFFER_LENGTH 256
 static uint8_t hdlc_rxBuffer[HDLC_RX_BUFFER_LENGTH];
 
+static uint16_t     crc_tabccitt[CCITT_TABLE_SIZE];   // size is fixed by crc calculator
+
 static void init_orp_protocol(void)
 {
-  orp_protocol
-  (
-      orpProtocol_txBuffer,           // encoder input payload 
-      ORP_PROTOCOL_TX_BUFFER_LENGTH,  // encoder input payload size
+  orp_protocol(
+    orpProtocol_txBuffer,           // encoder input payload 
+    ORP_PROTOCOL_TX_BUFFER_LENGTH,  // encoder input payload size
 
-      serial_txByte,                  // encoder - bind TX a byte to UART
+    serial_txByte,                  // encoder - bind TX a byte to UART                                      
 
-      hdlc_rxBuffer,                  // decoder - working buffer
-      HDLC_RX_BUFFER_LENGTH,          // decoder - length of working buffer
-      
-      app_requestResponse_cbh,        // decoder request responses from Octave 
-      app_notification_cbh            // decoder notifications from Octave
-    
+    hdlc_rxBuffer,                  // decoder - working buffer
+    HDLC_RX_BUFFER_LENGTH,          // decoder - length of working buffer
+
+    crc_tabccitt,                   // size is fixed by crc calculator
+    CCITT_TABLE_SIZE,     
+
+    app_requestResponse_cbh,        // decoder request responses from Octave 
+    app_notification_cbh            // decoder notifications from Octave
   );
   // note the serial_rxByte() needs handling by the app feeding it data from the serial port
 }
@@ -235,12 +240,22 @@ void setup() {
 
 
 
+static char ipKeyString[] = "adcs";
+static char opKeyString[] = "motorspd/num";
+
+void sendAdcValues(void)
+{
+  Serial.println("Send data to json input");
+  adcsAsJsonString();
+  orp_protocol_wakeup( sleep100ms);
+  orp_input_sendJson(ipKeyString, valAsString);
+}
+
 // ----------------------------------------------------------------------------
 // core state machine loop
 // ----------------------------------------------------------------------------
 
-static char ipKeyString[] = "adcs";
-static char opKeyString[] = "motorspd/num";
+
 
 void loop() 
 {
@@ -284,23 +299,22 @@ void loop()
           // Activate a callback from Octave edge output to micro
           if(orp_requestAck)
           {
-            orp_requestAck = false; 
-            state = 3;          
+            orp_requestAck = false;
+            sendAdcValues();  // workaround potential long delay before first vals are sent 
+            state = 3;       
           } 
           else
           {
             Serial.println("Activate a callback from Octave edge output to micro");
-            orp_output_registerCallback_num(opKeyString);  orp_requestAck = false;
+            orp_protocol_wakeup( sleep100ms);
+            orp_output_register_num(opKeyString);  orp_requestAck = false;
           }
           break;
       case 3:
         if(secondTimer.isReady()) // send data to server
         {
           secondTimer.reset();
-          Serial.println("Send data to json input");
-          adcsAsJsonString();
-          orp_protocol_wakeup( sleep100ms);
-          orp_input_sendJson(ipKeyString, valAsString);
+          sendAdcValues();
         }
         break;
       default:

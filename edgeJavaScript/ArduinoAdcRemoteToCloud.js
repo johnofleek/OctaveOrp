@@ -73,8 +73,11 @@ function(event){
 
 
   return {
-        // "/my_company/devices/device1/weather_data_at_location": [{"elems": {"weather": result}}],
-        // note that you have to create this path in the cloud streams manually
-        "/iinnovate/devices/john_test_yellow/lm36_adc1_temp": [{"elems": {"temperature1": s}}]
+    // "/my_company/devices/device1/weather_data_at_location": [{"elems": {"weather": result}}],
+    "/iinnovate/devices/john_test_yellow/lm36_adc1_temp": [{
+        "elems": {
+            "temperature1": s // ideally I'd use s.toFixed(2) - but thats a string which can;t be plotted
+        }
+      }]
     }
   }

@@ -170,7 +170,12 @@ void hdlc_frameEncode(const uint8_t *framebuffer, uint8_t frame_length)
     sendchar_function(FRAME_BOUNDARY_OCTET);
 }
 
-
+/// Octave ORP over Hdlc wakeup function
+///
+/// It's called by user app to wake up the Octave remote interface
+/// 
+/// @param delay100ms is a pointer to a callback handler provided by the
+///                   user app.
 void hdlc_wakeup( hdlc_delay100ms_cb delay100ms)
 {
     sendchar_function('~');

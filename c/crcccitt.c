@@ -35,40 +35,44 @@
 #include <stdlib.h>
 #include "crcccitt.h"
 
-#define CCITT_TABLE_SIZE	256 //256
+
 
 static uint16_t		crc_ccitt_generic( const unsigned char *input_str, size_t num_bytes, uint16_t start_value );
 static void         init_crcccitt_tab( void );
 
 static bool         crc_tabccitt_init       = false;	// 
-static uint16_t     crc_tabccitt[CCITT_TABLE_SIZE]; 	// TODO: remove this big array from here and pass it in 
 
-/*
- * uint16_t crc_xmodem( const unsigned char *input_str, size_t num_bytes );
- *
- * The function crc_xmodem() performs a one-pass calculation of an X-Modem CRC
- * for a byte string that has been passed as a parameter.
- */
+// static uint16_t     crc_tabccitt[CCITT_TABLE_SIZE]; 	// TODO: remove this big array from here and pass it in 
 
-uint16_t crc_xmodem( const unsigned char *input_str, size_t num_bytes ) {
+static uint16_t     * crc_tabccitt;	// pointer to crc_tabccitt[CCITT_TABLE_SIZE];
 
-	return crc_ccitt_generic( input_str, num_bytes, CRC_START_XMODEM );
 
-}  /* crc_xmodem */
+/// crcccitt init or constructor
+///
+/// Must be called before using the calculator
+/// 
+/// @param uint16_t * app_crc_tabccitt is a pointer to the app CRC table resource
+/// @param size_t app_crc_tabccitt_size is the sizeof the app CRC table
+/// @returns 0 if ok -1 if the table is not the correct size
+int8_t crcccitt_crcccitt(uint16_t * app_crc_tabccitt, size_t app_crc_tabccitt_size)
+{
+	int8_t retVal = 0;
 
-/*
- * uint16_t crc_ccitt_1d0f( const unsigned char *input_str, size_t num_bytes );
- *
- * The function crc_ccitt_1d0f() performs a one-pass calculation of the CCITT
- * CRC for a byte string that has been passed as a parameter. The initial value
- * 0x1d0f is used for the CRC.
- */
+	if(app_crc_tabccitt_size == CCITT_TABLE_SIZE)
+	{
+		crc_tabccitt = app_crc_tabccitt;
+		init_crcccitt_tab();
+	}
+	else
+	{
+		retVal = -1;	
+	}
 
-uint16_t crc_ccitt_1d0f( const unsigned char *input_str, size_t num_bytes ) {
+	return (retVal);
+}
 
-	return crc_ccitt_generic( input_str, num_bytes, CRC_START_CCITT_1D0F );
 
-}  /* crc_ccitt_1d0f */
+
 
 /*
  * uint16_t crc_ccitt_ffff( const unsigned char *input_str, size_t num_bytes );
@@ -94,26 +98,29 @@ uint16_t crc_ccitt_ffff( const unsigned char *input_str, size_t num_bytes ) {
 
 static uint16_t crc_ccitt_generic( const unsigned char *input_str, size_t num_bytes, uint16_t start_value ) {
 
-	uint16_t crc;
+	uint16_t crc = 0;
 	const unsigned char *ptr;
 	size_t a;
 
-	if ( ! crc_tabccitt_init ) 
+	/*if ( ! crc_tabccitt_init ) 
 	{
 		init_crcccitt_tab();
+		// no way to pass back a fault - the constructor / init needs to be successfull
 	}
+	*/
+	if ( crc_tabccitt_init ) 
+	{
+		crc = start_value;
+		ptr = input_str;
 
-	crc = start_value;
-	ptr = input_str;
-
-	if ( ptr != NULL ) {
-        for (a=0; a<num_bytes; a++) {
-            crc = (crc << 8) ^ crc_tabccitt[ ((crc >> 8) ^ (uint16_t) *ptr++) & 0x00FF ];
-        }
-    }
-
+		if ( ptr != NULL ) {
+			for (a=0; a<num_bytes; a++) {
+				crc = (crc << 8) ^ crc_tabccitt[ ((crc >> 8) ^ (uint16_t) *ptr++) & 0x00FF ];
+			}
+		}
+	}
+	
 	return crc;
-
 }  /* crc_ccitt_generic */
 
 /*

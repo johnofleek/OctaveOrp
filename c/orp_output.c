@@ -7,7 +7,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #include "orp.h"
 
-// Creates remote resource in the Octave edge device
+// Creates remote numeric resource in the Octave edge device
 int16_t orp_output_create_num(char *keyString)
 {
 
@@ -27,7 +27,7 @@ int16_t orp_output_create_num(char *keyString)
 
 // Registers a callback inside the Octave edge
 // so that the local handler gets called when something changes on the edge device
-int16_t orp_output_registerCallback_num(char *keyString)
+int16_t orp_output_register_num(char *keyString)
 {
 	int16_t retVal;
 
@@ -39,3 +39,66 @@ int16_t orp_output_registerCallback_num(char *keyString)
 }
 
 
+// SBR_DATA_TYPE_JSON
+// Creates remote resource in the Octave edge device
+int16_t orp_output_create_json(char *keyString)
+{
+
+	// register the Octave output
+	// then exit
+
+    int16_t retVal;
+	
+	retVal = orp_protocol_createResource(
+		SBR_PKT_RQST_OUTPUT_CREATE,
+		SBR_DATA_TYPE_JSON,
+		keyString,
+		""
+	);
+	return(retVal);
+}
+
+// Registers a callback inside the Octave edge
+// so that the local handler gets called when something changes on the edge device
+int16_t orp_output_register_json(char *keyString)
+{
+	int16_t retVal;
+
+	retVal = orp_protocol_addpushHandler(
+  		SBR_DATA_TYPE_JSON,
+  		keyString
+	);
+	return(retVal);
+}
+
+// SBR_DATA_TYPE_STRING
+// Creates remote resource in the Octave edge device
+int16_t orp_output_create_string(char *keyString)
+{
+
+	// register the Octave output
+	// then exit
+
+    int16_t retVal;
+	
+	retVal = orp_protocol_createResource(
+		SBR_PKT_RQST_OUTPUT_CREATE,
+		SBR_DATA_TYPE_STRING,
+		keyString,
+		""
+	);
+	return(retVal);
+}
+
+// Registers a callback inside the Octave edge
+// so that the local handler gets called when something changes on the edge device
+int16_t orp_output_register_string(char *keyString)
+{
+	int16_t retVal;
+
+	retVal = orp_protocol_addpushHandler(
+  		SBR_DATA_TYPE_STRING,
+  		keyString
+	);
+	return(retVal);
+}

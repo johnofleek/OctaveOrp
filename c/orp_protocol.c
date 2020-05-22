@@ -76,15 +76,17 @@ static void hdlc_decoded_cbh(const uint8_t *buffer, uint16_t bufferLength)
 *   Initialise orp and hdlc
 */
 void orp_protocol(
-    char * app_orp_txBuffer,           // encoder input payload 
+    char * app_orp_txBuffer,            // encoder input payload 
     size_t app_orp_txBuffer_size,       // encoder input payload size
 
     orp_hdlc_tx_cb tx_serial_cb,        // encoder - bind TX a byte to UART
                                         // decoder - no need to bind rx as the HDLC layer has a direct write input 
 
-    // hdlc_decoder_callback_type hdlc_decoded_callback, // decoder - frame decoded callback with payload ----- don't need this ??? !!!
-    uint8_t *hdlc_rxBuffer,            // decoder - working buffer
+    uint8_t *hdlc_rxBuffer,             // decoder - working buffer
     uint16_t hdlc_rxBuffer_size,        // decoder - length of working buffer
+
+    uint16_t * app_crc_tabccitt,        // is a pointer to the app CRC table resource 
+    size_t app_crc_tabccitt_size,       // is the sizeof the app CRC table
 
     orp_protocol_genericRequestResponse_cb  appRequestIn_cbf, // called by rx decoder when response arrives
     orp_protocol_genericNotification_cb     appNotificationIn_cbf // called by rx decoder when response arrives
@@ -99,6 +101,7 @@ void orp_protocol(
     // Bind the user "app Request_response" callback handler - this is to handle uplink acks (response)
     orp_currentRequestResponse_cbf = appRequestIn_cbf;
 
+    crcccitt_crcccitt( app_crc_tabccitt,  app_crc_tabccitt_size);
 
     hdlc_hdlc (    
         tx_serial_cb,                        // encoder - binds - sends a byte to UART
@@ -107,6 +110,9 @@ void orp_protocol(
         hdlc_rxBuffer_size                  // decoder - length of working buffer
     );
 }
+
+/// @param uint16_t * app_crc_tabccitt is a pointer to the app CRC table resource
+/// @param size_t app_crc_tabccitt_size is the sizeof the app CRC table
 
 /*
 *   Apps sends RAW HDLC data from serial stream in via this function one at a time

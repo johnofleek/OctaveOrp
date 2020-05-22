@@ -191,18 +191,20 @@ typedef void (*orp_protocol_genericNotification_cb)
 
 // pass in buffer references 
 void orp_protocol(
-  char * app_orp_inPayload,           // encoder input payload 
-  size_t app_orp_inPayloadSize,       // encoder input payload size
+    char * app_orp_txBuffer,            // encoder input payload 
+    size_t app_orp_txBuffer_size,       // encoder input payload size
 
-  orp_hdlc_tx_cb tx_char_cbh,         // encoder - bind TX a byte to UART
-                                      // decoder - no need to bind RX as the HDLC layer has a direct write input 
+    orp_hdlc_tx_cb tx_serial_cb,        // encoder - bind TX a byte to UART
+                                        // decoder - no need to bind rx as the HDLC layer has a direct write input 
 
-  // hdlc_decoder_callback_type hdlc_decoded_callback, // decoder - frame decoded callback with payload 
-  uint8_t *hdlc_rx_buffer,            // decoder - working buffer
-  uint16_t hdlc_rx_bufferSize,        // decoder - length of working buffer
+    uint8_t *hdlc_rxBuffer,             // decoder - working buffer
+    uint16_t hdlc_rxBuffer_size,        // decoder - length of working buffer
 
-  orp_protocol_genericRequestResponse_cb  appRequestIn_cbf,     // app function called by rx decoder when response arrives
-  orp_protocol_genericNotification_cb     appNotificationIn_cbf // app function called by rx decoder when Notification arrives
+    uint16_t * app_crc_tabccitt,        // is a pointer to the app CRC table resource 
+    size_t app_crc_tabccitt_size,       // is the sizeof the app CRC table
+
+    orp_protocol_genericRequestResponse_cb  appRequestIn_cbf, // called by rx decoder when response arrives
+    orp_protocol_genericNotification_cb     appNotificationIn_cbf // called by rx decoder when response arrives
 );
 
 

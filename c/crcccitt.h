@@ -42,6 +42,8 @@ extern "C" {
 // #include <stdint.h>
 #include "orp.h"
 
+#define CCITT_TABLE_SIZE	256 //256
+
 /*
  * #define CRC_POLY_xxxx
  *
@@ -81,27 +83,23 @@ extern "C" {
  * Prototype list of global functions
  */
 
-unsigned char *		checksum_NMEA(      const unsigned char *input_str, unsigned char *result  );
-uint8_t			crc_8(              const unsigned char *input_str, size_t num_bytes       );
-uint16_t		crc_16(             const unsigned char *input_str, size_t num_bytes       );
-uint32_t		crc_32(             const unsigned char *input_str, size_t num_bytes       );
-uint64_t		crc_64_ecma(        const unsigned char *input_str, size_t num_bytes       );
-uint64_t		crc_64_we(          const unsigned char *input_str, size_t num_bytes       );
-uint16_t		crc_ccitt_1d0f(     const unsigned char *input_str, size_t num_bytes       );
+/// crcccitt ffff calculator
+///
+/// Takes a payload string and returns CRC value
+/// 
+/// @param  const unsigned char * input payload
+/// @param size_t payload size in bytes
+/// @returns uint16_t representation of the calculated CRC
 uint16_t		crc_ccitt_ffff(     const unsigned char *input_str, size_t num_bytes       );
-uint16_t		crc_dnp(            const unsigned char *input_str, size_t num_bytes       );
-uint16_t		crc_kermit(         const unsigned char *input_str, size_t num_bytes       );
-uint16_t		crc_modbus(         const unsigned char *input_str, size_t num_bytes       );
-uint16_t		crc_sick(           const unsigned char *input_str, size_t num_bytes       );
-uint16_t		crc_xmodem(         const unsigned char *input_str, size_t num_bytes       );
-uint8_t			update_crc_8(       uint8_t  crc, unsigned char c                          );
-uint16_t		update_crc_16(      uint16_t crc, unsigned char c                          );
-uint32_t		update_crc_32(      uint32_t crc, unsigned char c                          );
-uint64_t		update_crc_64_ecma( uint64_t crc, unsigned char c                          );
-uint16_t		update_crc_ccitt(   uint16_t crc, unsigned char c                          );
-uint16_t		update_crc_dnp(     uint16_t crc, unsigned char c                          );
-uint16_t		update_crc_kermit(  uint16_t crc, unsigned char c                          );
-uint16_t		update_crc_sick(    uint16_t crc, unsigned char c, unsigned char prev_byte );
+
+/// crcccitt init or constructor
+///
+/// Must be called before using the calculator
+/// 
+/// @param uint16_t * app_crc_tabccitt is a pointer to the app CRC table resource
+/// @param size_t app_crc_tabccitt_size is the sizeof the app CRC table
+/// @returns 0 if ok -1 if the table is not the correct size
+int8_t crcccitt_crcccitt(uint16_t * app_crc_tabccitt, size_t app_crc_tabccitt_size);
 
 /*
  * Global CRC lookup tables
