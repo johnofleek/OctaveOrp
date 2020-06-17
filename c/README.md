@@ -1,10 +1,19 @@
 # Octave remote C code project
 
-This is a work in progress - at the moment the API is being defined.  
+The C code has been written to be hopefully
+1. As portable as possible
+2. Target simple microcontrollers
+3. RAM resources are passed into the code where possible (no local mallocs or static data)
+
+It is being developed and tested on an Atmel Arduino Mega2560.  
+A third party is successfully using the c code with a 16 bit Microchip PIC.   
 
 For info on the API development [click](../docs/remoteC_api/cpp_orp_microApi.md) 
 
-# Current status
+If you have any ideas or feedback please get in touch
+
+
+# Current status of Examples
 *OctaveOrp/c/AppExamples/ArduinoAvr/PC_mingw32/test_orp_input.c*  
 Builds and runs for mingw32 
 
@@ -35,10 +44,11 @@ Tested with :
 
 
 ## Hardware
-This is a list of the hardware used to test the application.  
+This is a list of the hardware used to test the example applications.  
 
 * Arduino Mega 2560
 * mangOH yellow WP7702(octave_2.1.3_wp77xx Legato version 19.07 Modem firmware version R12)
+* TMP36 analogue output temperature sensor (horrible electrically but works if carefully integrated)
 * SEEED Grove - Temperature Sensor V1.2 attached to Arduino ADC 0
 
 ## Useful websites
