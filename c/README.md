@@ -8,8 +8,6 @@ The C code has been written to be hopefully
 It is being developed and tested on an Atmel Arduino Mega2560.  
 A third party is successfully using the c code with a 16 bit Microchip PIC.   
 
-For info on the API development [click](../docs/remoteC_api/cpp_orp_microApi.md) 
-
 If you have any ideas or feedback please get in touch
 
 
