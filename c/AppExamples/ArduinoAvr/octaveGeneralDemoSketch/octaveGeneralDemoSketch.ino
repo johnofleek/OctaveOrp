@@ -14,19 +14,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <orp_output.h>
 #include <orp_protocol.h>
 
-#include <Wire.h> // Library for I2C communication
-#include <LiquidCrystal_I2C.h> // Library for LCD
 
-#define LCD_LINE_LEN 16
-LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x3F, LCD_LINE_LEN, 2); // Change to (0x27,20,4) for 20x4 LCD.
-/* 
- *  For spec on ORP
- *  https://docs.octave.dev/references/edge/octave_resource_protocol/#orp-api
- */
-
-
-// #include <avr/pgmspace.h>
-// #include <math.h>
 
 
 #include <SimpleTimer.h>  // polled timer slightly better than delay()
@@ -34,7 +22,7 @@ LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x3F, LCD_LINE_LEN, 2); // Change to (
 #define TIME_CALL_MS 1000
 SimpleTimer firstTimer(TIME_CALL_MS);
 
-SimpleTimer secondTimer((uint64_t)TIME_CALL_MS * (uint64_t)(20)); // measurement data orp rate
+SimpleTimer secondTimer((uint64_t)TIME_CALL_MS * (uint64_t)(5*60)); // measurement data orp rate
 
 
 // ----------------------------------------------------------------------------
@@ -128,8 +116,6 @@ static void app_notification_cbh(const uint8_t *buffer, uint16_t bufferLength)
   uint16_t ctr;
   uint16_t currentDataTypePos = 0;
 
-  lcd.clear();
-
   // decode()
   for (ctr = 0; ctr < bufferLength; ctr++)
   {
@@ -141,14 +127,12 @@ static void app_notification_cbh(const uint8_t *buffer, uint16_t bufferLength)
       {
         case 'P':
           Serial.print(("Path "));
-          lcd.setCursor(0, 0);
           break;
         case 'T':
           Serial.print(("Timestamp "));
           break;
         case 'D':
           Serial.print(("Data "));
-          lcd.setCursor(0, 1);
           break;
         default:
           Serial.print(("Unknown "));
@@ -161,11 +145,10 @@ static void app_notification_cbh(const uint8_t *buffer, uint16_t bufferLength)
         // TRACE(("%c",buffer[ctr]));
         Serial.print(( char) buffer[ctr]);
         // Put the message onto the Arduino LCD
-        if((ctr - (currentDataTypePos+1)) < LCD_LINE_LEN)
+        if((ctr - (currentDataTypePos+1)) < 80)
         {
           if((buffer[currentDataTypePos] == 'P') || (buffer[currentDataTypePos] == 'D'))
           {
-            lcd.print(( char) buffer[ctr]);
           }
         }
         if(( (char) buffer[ctr +1]) == ',')
@@ -188,6 +171,8 @@ static uint8_t hdlc_rxBuffer[HDLC_RX_BUFFER_LENGTH];
 
 static uint16_t     crc_tabccitt[CCITT_TABLE_SIZE];   // size is fixed by crc calculator
 
+
+// This version passes in the crc table 
 static void init_orp_protocol(void)
 {
   orp_protocol(
@@ -228,17 +213,7 @@ static void adcsAsJsonString(void)
   Serial.println(valAsString);
 }
 
-static void lcd_init(void)
-{
-  // Initiate the LCD:
-  lcd.init();
-  lcd.backlight();
 
-  lcd.setCursor(0, 0); // Set the cursor on the first column and first row.
-  lcd.print("Hello"); // Print the string "Hello World!"
-  lcd.setCursor(0, 1); //Set the cursor on the third column and the second row (counting starts at 0!).
-  lcd.print("From John");
-}
 
 // ----------------------------------------------------------------------------
 // Standard arduino setup
@@ -254,18 +229,10 @@ void setup() {
   pinMode(17, INPUT);
   digitalWrite(17, LOW); // disable internal pullup
 
-  // Need to work out what happens by default with the adc pins
- 
-
-  // To reduce noise - connect the 3V3 source to AREF - gives 0 to 3V3 span
-  // analogReference(EXTERNAL);
-
   init_orp_protocol();
 
   adcsAsJsonString();
-
-  lcd_init();
-  
+ 
   Serial.println("setup done");
 }
 
