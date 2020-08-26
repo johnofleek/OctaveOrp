@@ -1,0 +1,13 @@
+## this a Sync message
+
+~Y101T315964892.000000,S0,R0½\~
+
+
+Notification: <packet type[1]><version[1]><sequence[2]><timestamp><received><sent>
+
+packet type:  'Y'
+version:      Maximum ORP version supported
+sequence:     unused
+timestamp:    'T'<time in seconds>
+received:     'R'<received count>. Packets received since restart, equal to zero (ASCII decimal, NOT null terminated)
+sent:         'S'<sent count>. Packets sent since restart, equal to zero (ASCII decimal, NOT null terminated)

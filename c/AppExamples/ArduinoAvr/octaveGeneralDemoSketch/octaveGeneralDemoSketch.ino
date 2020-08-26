@@ -6,6 +6,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
  */
 
+/*
+ * Added support for SYNC packets
+ * The edge device will send sync packets following a reset
+ * This enables the example to detect if the ORP edge device resets 
+ * and the app can then restart the statemachine so that ORP edge 
+ * datapoints are recreated
+ * Remember that ORP Edge datapoints are volatile (I think they all are except for virtual/config)
+ */
+
 #include <crcccitt.h>
 #include <debug.h>
 #include <hdlc.h>
@@ -80,38 +89,60 @@ void serialEvent2()
 // ----------------------------------------------------------------------------
 
 static bool orp_requestAck  = false; // 
-
+static bool orp_rebooted = true;
 
 // process Octave request acks
 static void app_requestResponse_cbh(const uint8_t *buffer, uint16_t bufferLength)
 {
-  // (void)buffer;
-  (void)bufferLength;
+  char packetType = (char)buffer[0];
+
   // TRACE(("\n\rjsonCbh <%c%c%c%c> len %d\n\r", buffer[0],buffer[1],buffer[2],buffer[3], bufferLength));
   Serial.println();
-  Serial.print((char)buffer[0]); 
-  Serial.print(" R(");
-  Serial.print(buffer[1] - 64);  // response code
+  Serial.print("Response cb ");
+  Serial.print("TYPE(");
+  Serial.print(packetType);       
   Serial.print(") "); 
-  Serial.print((char)buffer[2]); 
-  Serial.print((char)buffer[3]);  
-  Serial.println(" ack cb");
+
+  Serial.print(" STATUS(");
+  Serial.print(buffer[1] - 64);  // Status code
+  Serial.print(") "); 
   
-  orp_requestAck = true; // fix this later
+  Serial.print((char)buffer[2]);  // context defines use of fields - see the ORP manual
+  Serial.print((char)buffer[3]);
+  
+  Serial.print(" Len(");
+  Serial.print(bufferLength); 
+  Serial.println(") ");   
+
+  if(packetType == SBR_PKT_RESP_SYNC_RQST)
+  {
+    // the WP has rebooted
+    // we need some code here to restart the state machine
+    orp_rebooted = true;
+  }
+  else
+  {
+    orp_requestAck = true; // very crude fix this later // this indicates some sort of response has occcured
+  }
 }
 
 // process Octave notifications
 static void app_notification_cbh(const uint8_t *buffer, uint16_t bufferLength)
 {
+  char packetType = (char)buffer[0];
   // TRACE(("\n\rNotification Cbh <%c%c%c%c> len %d\n\r\n\r", buffer[0],buffer[1],buffer[2],buffer[3], bufferLength));
   Serial.println();
-  Serial.print((char)buffer[0]); 
-  Serial.print(" R(");
-  Serial.print(buffer[1] - 64);  // response code
+  Serial.print("Notify cb   ");
+
+  Serial.print("TYPE(");
+  Serial.print(packetType); // Message type
+  
+  Serial.print(") STATUS(");
+  Serial.print(buffer[1] - 64);  // Status code
   Serial.print(") "); 
   Serial.print((char)buffer[2]); 
-  Serial.print((char)buffer[3]);  
-  Serial.println(" Notify cb");
+  Serial.println((char)buffer[3]);  
+ 
   
   uint16_t ctr;
   uint16_t currentDataTypePos = 0;
@@ -260,6 +291,13 @@ void sendAdcValues(void)
 void loop() 
 {
   static uint8_t state = 0;
+
+  if(orp_rebooted) // flag set by SYNC message received
+  {
+    state = 0;
+    orp_rebooted = false;
+    orp_requestAck = false;
+  }
   
   if (firstTimer.isReady())
   {       

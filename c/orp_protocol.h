@@ -65,6 +65,8 @@ extern "C" {
 #define SBR_PKT_NTFY_SENSOR_CALL     'b'   // type[1] pad[1]    pad[2] path[]
 #define SBR_PKT_RESP_SENSOR_CALL     'B'   // type[1] status[1] pad[2]
 
+#define SBR_PKT_RESP_SYNC_RQST       'Y'   // packet type[1] version[1] sequence[2] timestamp received sent
+
 #define SBR_PKT_RESP_UNKNOWN_RQST    '?'   // type[1] status[1] pad[2]
 
 
@@ -124,6 +126,8 @@ typedef enum
 #define SBR_FIELD_ID_TIME            'T'
 #define SBR_FIELD_ID_UNITS           'U'
 #define SBR_FIELD_ID_DATA            'D'
+#define SBR_FIELD_ID_RECEIVED_COUNT  'R'
+#define SBR_FIELD_ID_SENT_COUNT      'S'
 
 // Variable length field separator
 #define SBR_VARLENGTH_SEPARATOR      ','
